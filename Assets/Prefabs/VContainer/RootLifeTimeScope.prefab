@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 370334453340885385}
   - component: {fileID: 2566204086193606978}
+  - component: {fileID: 4957470676763420015}
   m_Layer: 0
   m_Name: TowerStackManager
   m_TagString: Untagged
@@ -119,6 +120,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 637491b425687485fb43b626a67f2056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &4957470676763420015
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549632644969102290}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 100, y: 5, z: 100}
+  m_Center: {x: 0, y: -5, z: 0}
 --- !u!1 &1808222287870927849
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,6 +340,58 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7652222974269735664}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4147359413838769929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3767139223621146990}
+  - component: {fileID: 983109707301604984}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3767139223621146990
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4147359413838769929}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7872230137820459386}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &983109707301604984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4147359413838769929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38839a3b19f9c4054b39c5017d6a70bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placementClip: {fileID: 8300000, guid: dfd4ad19b7fec43029a54b63892ac2ed, type: 3}
+  gameEndClip: {fileID: 8300000, guid: 1cb482534a6e24ee28efb92f2a54a0d9, type: 3}
+  defaultPoolSize: 10
+  maxPoolSize: 100
+  startPitch: 0.7
+  pitchIncrement: 0.025
+  maxPitch: 1.4
+  resetDelay: 1.5
 --- !u!1 &4725552682529814611
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,6 +759,7 @@ Transform:
   - {fileID: 7128986273408004148}
   - {fileID: 7652222974269735664}
   - {fileID: 3579926706010888406}
+  - {fileID: 3767139223621146990}
   m_Father: {fileID: 5958544419092522267}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7821522167544353220

@@ -27,10 +27,12 @@ public class BlockPoolManager : MonoBehaviour
     public Block GetBlock()
     {
         return blockPool.Get();
-    }
+    }   
 
     public void ReleaseBlock(Block block)
     {
+        block.SetDefaultRotation();
+        block.SetKinematic(true);
         blockPool.Release(block);
     }
 }

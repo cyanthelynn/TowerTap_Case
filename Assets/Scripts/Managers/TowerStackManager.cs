@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Managers;
 using UnityEngine;
@@ -21,6 +22,12 @@ public class TowerStackManager : MonoBehaviour, IStartable
 
     public void Start()
     {
+        InitFirstTower();
+        SpawnNextMovingBlock();
+    }
+
+    private void InitFirstTower()
+    {
         Vector3 basePos = Vector3.zero;
         var baseBlock = poolManager.GetBlock();
         baseBlock.transform.SetParent(transform, false);
@@ -28,7 +35,6 @@ public class TowerStackManager : MonoBehaviour, IStartable
         baseBlock.transform.localScale = new Vector3(1f, parameters.blockHeight, 1f);
         stackedBlocks.Push(baseBlock);
         layerCount = 1;
-        SpawnNextMovingBlock();
     }
 
     private void Update()
@@ -44,6 +50,11 @@ public class TowerStackManager : MonoBehaviour, IStartable
         {
             TryTrimBlock();
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+         other.TryGetComponent(out Block block); { poolManager.ReleaseBlock(block); }
     }
 
     private void MoveBlock()
@@ -79,7 +90,6 @@ public class TowerStackManager : MonoBehaviour, IStartable
         }
         return next;
     }
-
 
     private void SpawnNextMovingBlock()
     {
@@ -143,6 +153,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
 
     stackedBlocks.Push(movingTransform);
     layerCount++;
+    _cameraController.SetCameraHeight(lastBlock);
     _eventBus.Publish(new BlockPlacedEvent());
     currentMovingBlock = null;
     SpawnNextMovingBlock();
@@ -244,7 +255,6 @@ private void PlaceSurvivingPiece(bool onZ, Block last, Block moving, float overl
         moving.transform.localScale = new Vector3(newSize, parameters.blockHeight, last.transform.localScale.z);
     }
     
-    _cameraController.SetCameraHeight(last);
 }
 
 private void DropRemovedPiece(

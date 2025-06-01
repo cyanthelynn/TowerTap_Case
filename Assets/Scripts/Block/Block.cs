@@ -12,4 +12,11 @@ public class Block : MonoBehaviour
     }
 
     public void PlayPerfectEffect() => perfectEffect.Play();
+
+    public void SetDefaultRotation()
+    {
+        var transformRotation = transform.rotation;
+        transformRotation.eulerAngles = Vector3.zero;
+        transform.rotation = transformRotation;
+    }
 }
