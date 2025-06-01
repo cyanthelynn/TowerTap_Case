@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Managers;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -9,6 +10,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
     [Inject] private BlockPoolManager poolManager;
     [Inject] private ParticleManager _particleManager;
     [Inject] private CameraController _cameraController;
+    [Inject] private IEventBus _eventBus;
 
     private readonly Stack<Block> stackedBlocks = new Stack<Block>();
     private Block currentMovingBlock;
@@ -134,12 +136,14 @@ public class TowerStackManager : MonoBehaviour, IStartable
     {
         isGameOver = true;
         currentMovingBlock.GetComponent<Rigidbody>().isKinematic = false;
+        _eventBus.Publish(new GameEndedEvent());
         Debug.Log("GAME OVER");
         return;
     }
 
     stackedBlocks.Push(movingTransform);
     layerCount++;
+    _eventBus.Publish(new BlockPlacedEvent());
     currentMovingBlock = null;
     SpawnNextMovingBlock();
 }
