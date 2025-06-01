@@ -3,20 +3,20 @@ using UnityEngine.Pool;
 
 public class BlockPoolManager : MonoBehaviour
 {
-    [SerializeField] private GameObject blockPrefab;
-    private ObjectPool<GameObject> blockPool;
+    [SerializeField] private Block blockPrefab;
+    private ObjectPool<Block> blockPool;
 
     private void Awake()
     {
-        blockPool = new ObjectPool<GameObject>(
+        blockPool = new ObjectPool<Block>(
             createFunc: () =>
             {
                 var obj = Instantiate(blockPrefab);
-                obj.SetActive(false);
+                obj.gameObject.SetActive(false);
                 return obj;
             },
-            actionOnGet: obj => obj.SetActive(true),
-            actionOnRelease: obj => obj.SetActive(false),
+            actionOnGet: obj => obj.gameObject.SetActive(true),
+            actionOnRelease: obj => obj.gameObject.SetActive(false),
             actionOnDestroy: obj => Destroy(obj),
             collectionCheck: false,
             defaultCapacity: 100,
@@ -24,12 +24,12 @@ public class BlockPoolManager : MonoBehaviour
         );
     }
 
-    public GameObject GetBlock()
+    public Block GetBlock()
     {
         return blockPool.Get();
     }
 
-    public void ReleaseBlock(GameObject block)
+    public void ReleaseBlock(Block block)
     {
         blockPool.Release(block);
     }

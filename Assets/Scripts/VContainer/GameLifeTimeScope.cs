@@ -10,5 +10,7 @@ public class GameLifeTimeScope : LifetimeScope
             builder.RegisterInstance(gameParameters);
             builder.RegisterComponentInHierarchy<BlockPoolManager>();
             builder.RegisterComponentInHierarchy<TowerStackManager>();
+            builder.RegisterComponentInHierarchy<ParticleManager>();
+            builder.RegisterComponentInHierarchy<CameraController>();
         }
     }
