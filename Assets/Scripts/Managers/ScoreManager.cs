@@ -1,4 +1,5 @@
 using Managers;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using VContainer;
 
@@ -7,13 +8,12 @@ public class ScoreManager : MonoBehaviour
     public int CurrentScore { get; private set; }
 
     private IEventBus _eventBus;
-    private GameData _gameData;
+    [SerializeField,Required] private GameData _gameData;
 
     [Inject]
-    public void Construct(IEventBus eventBus, GameData gameData)
+    public void Construct(IEventBus eventBus)
     {
         _eventBus = eventBus;
-        _gameData = gameData;
     }
 
     private void OnEnable()
