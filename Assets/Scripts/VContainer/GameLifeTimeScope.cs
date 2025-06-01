@@ -5,11 +5,14 @@ using VContainer.Unity;
 public class GameLifetimeScope : LifetimeScope
 {
     [SerializeField] private GameParameters gameParameters;
+    [SerializeField] private GameData gameData;
 
     protected override void Configure(IContainerBuilder builder)
     {
         builder.RegisterInstance(gameParameters);
+        builder.RegisterInstance(gameData);
         builder.Register<IEventBus, EventBus>(Lifetime.Singleton);
+        builder.RegisterComponentInHierarchy<SaveManager>();
         builder.RegisterComponentInHierarchy<CameraController>();
         builder.RegisterComponentInHierarchy<BlockPoolManager>();
         builder.RegisterComponentInHierarchy<TowerStackManager>();

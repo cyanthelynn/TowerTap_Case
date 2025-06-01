@@ -10,11 +10,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
 
     private IEventBus _eventBus;
-
+    private ScoreManager _scoreManager;
     [Inject]
-    public void Construct(IEventBus eventBus)
+    public void Construct(IEventBus eventBus, ScoreManager scoreManager)
     {
         _eventBus = eventBus;
+        _scoreManager = scoreManager;
     }
 
     private void OnEnable()
@@ -33,7 +34,6 @@ public class UIManager : MonoBehaviour
 
     private void OnGameStart(GameStartEvent evt)
     {
-        ScoreManager.ResetScore();
         hudPanel.SetActive(true);
         gameOverPanel.SetActive(false);
         UpdateScoreUI();
@@ -52,6 +52,6 @@ public class UIManager : MonoBehaviour
 
     private void UpdateScoreUI()
     {
-        scoreText.text = ScoreManager.CurrentScore.ToString();
+        scoreText.text = _scoreManager.CurrentScore.ToString();
     }
 }
