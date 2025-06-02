@@ -19,4 +19,10 @@ public class Block : MonoBehaviour
         transformRotation.eulerAngles = Vector3.zero;
         transform.rotation = transformRotation;
     }
+
+    public void SelfExplode()
+    {   
+        SetKinematic(false);
+        _rb.AddExplosionForce(2000,transform.position,5,2,ForceMode.Impulse);
+    }
 }

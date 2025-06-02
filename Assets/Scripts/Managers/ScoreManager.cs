@@ -47,4 +47,9 @@ public class ScoreManager : MonoBehaviour
     {
         CurrentScore = 0;
     }
+
+    public int GetCurrentHighScoreValue()
+    {
+        return _gameData.highScore;
+    }
 }

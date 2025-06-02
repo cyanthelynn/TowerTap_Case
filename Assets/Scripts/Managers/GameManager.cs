@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
         _eventBus = eventBus;
     }
 
-    private void Start()
+    public void StartGame()
     {
         _eventBus.Publish(new GameStartEvent());
     }
@@ -20,5 +20,10 @@ public class GameManager : MonoBehaviour
     public void EndGame()
     {
         _eventBus.Publish(new GameEndedEvent());
+    }
+
+    public void RestartGame()
+    {
+        _eventBus.Publish(new RestartGameEvent());
     }
 }

@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Managers;
 using UnityEngine;
 using VContainer;
@@ -8,6 +10,7 @@ using VContainer.Unity;
 public class TowerStackManager : MonoBehaviour, IStartable
 {
     [Inject] private GameParameters parameters;
+    [Inject] private GameManager _gameManager;
     [Inject] private BlockPoolManager poolManager;
     [Inject] private ParticleManager _particleManager;
     [Inject] private CameraController _cameraController;
@@ -20,32 +23,71 @@ public class TowerStackManager : MonoBehaviour, IStartable
     private Vector3 moveDirection;
     private float currentRange;
 
+    private void OnEnable()
+    {
+        _eventBus.Subscribe<GameStartEvent>(OnGameStart);
+        _eventBus.Subscribe<GameEndedEvent>(OnGameEnded);
+        _eventBus.Subscribe<RestartGameEvent>(OnGameRestarted);
+    }
+    private void OnGameStart(GameStartEvent evt)
+    {
+        isGameOver = false;
+        SpawnNextMovingBlock();
+    }
+
+    private void OnGameEnded(GameEndedEvent evt)
+    {
+        _cameraController.SetPlayGameCamera(false);
+    }
+
+    private void OnGameRestarted(RestartGameEvent evt)
+    {
+        ClearTowerStack();
+        InitFirstTower();
+        _cameraController.SetPlayGameCamera(true);
+    }
+
+    private void OnDisable()
+    {
+        _eventBus.Unsubscribe<GameStartEvent>(OnGameStart);
+        _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
+        _eventBus.Unsubscribe<RestartGameEvent>(OnGameRestarted);
+    }
+    
     public void Start()
     {
         InitFirstTower();
-        SpawnNextMovingBlock();
     }
 
     private void InitFirstTower()
     {
-        Vector3 basePos = Vector3.zero;
+        Vector3 basePos = new Vector3(0, -0.45f, 0);
         var baseBlock = poolManager.GetBlock();
         baseBlock.transform.SetParent(transform, false);
         baseBlock.transform.localPosition = basePos;
-        baseBlock.transform.localScale = new Vector3(1f, parameters.blockHeight, 1f);
+        baseBlock.transform.localScale = new Vector3(1f, 1, 1f);
         stackedBlocks.Push(baseBlock);
         layerCount = 1;
+        _cameraController.SetCameraHeight(baseBlock);
     }
 
+    private void ClearTowerStack()
+    {
+        foreach (var block in stackedBlocks)
+        {
+            RemoveBlocks(block);
+        }
+        stackedBlocks.Clear();
+    }
+
+    private void RemoveBlocks(Block block)
+    {
+        poolManager.ReleaseBlock(block);
+    }
     private void Update()
     {
         if (isGameOver) return;
-
-        if (currentMovingBlock != null)
-        {
-            MoveBlock();
-        }
-
+        
         if (Input.GetMouseButtonDown(0))
         {
             TryTrimBlock();
@@ -57,40 +99,34 @@ public class TowerStackManager : MonoBehaviour, IStartable
          other.TryGetComponent(out Block block); { poolManager.ReleaseBlock(block); }
     }
 
+    private Tween _moveTween;
+
     private void MoveBlock()
     {
-        var pos = currentMovingBlock.transform.localPosition;
+        _moveTween?.Kill();
 
+        float range = parameters.movementRange;
+        float speed = parameters.moveSpeed;
+        float distance = range * 2f;
+        float duration = distance / speed;
+        
         if (IsMovingOnZ())
         {
-            pos.z = MoveAxis(pos.z, ref moveDirection.z, parameters.moveSpeed, parameters.movementRange);
+            _moveTween = currentMovingBlock.transform
+                .DOLocalMoveZ(range, duration)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetEase(Ease.Linear);
         }
         else
         {
-            pos.x = MoveAxis(pos.x, ref moveDirection.x, parameters.moveSpeed, parameters.movementRange);
+            _moveTween = currentMovingBlock.transform
+                .DOLocalMoveX(range, duration)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetEase(Ease.Linear);
         }
-
-        currentMovingBlock.transform.localPosition = pos;
     }
 
     private bool IsMovingOnZ() => moveDirection.z != 0f;
-
-    private float MoveAxis(float current, ref float direction, float speed, float range)
-    {
-        float next = current + direction * speed * Time.deltaTime;
-        if (next > range)
-        {
-            direction = -1f;
-            return range;
-        }
-        if (next < -range)
-        {
-            direction = 1f;
-            return -range;
-        }
-        return next;
-    }
-
     private void SpawnNextMovingBlock()
     {
         var lastBlock = stackedBlocks.Peek();
@@ -104,6 +140,8 @@ public class TowerStackManager : MonoBehaviour, IStartable
         currentMovingBlock.transform.SetParent(transform, false);
         currentMovingBlock.transform.localPosition = spawnPos;
         currentMovingBlock.transform.localScale = spawnScale;
+        
+        MoveBlock();
     }
 
     private void CalculateSpawnScale(ref Block lastBlock, ref Vector3 spawnScale)
@@ -146,7 +184,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
     {
         isGameOver = true;
         currentMovingBlock.GetComponent<Rigidbody>().isKinematic = false;
-        _eventBus.Publish(new GameEndedEvent());
+        _gameManager.EndGame();
         Debug.Log("GAME OVER");
         return;
     }
