@@ -17,13 +17,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button restartButton;
 
     private IEventBus _eventBus;
-    private ScoreManager _scoreManager;
     private GameManager _gameManager;
     [Inject]
-    public void Construct(IEventBus eventBus, ScoreManager scoreManager,GameManager gameManager)
+    public void Construct(IEventBus eventBus,GameManager gameManager)
     {
         _eventBus = eventBus;
-        _scoreManager = scoreManager;
         _gameManager = gameManager;
     }
 
@@ -34,9 +32,8 @@ public class UIManager : MonoBehaviour
         _eventBus.Subscribe<GameStartEvent>(OnGameStart);
         _eventBus.Subscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Subscribe<RestartGameEvent>(OnGameRestarted);
-        _eventBus.Subscribe<BlockPlacedEvent>(OnBlockPlaced);
     }
-
+    
     private void OnDisable()
     {
         tapToStartButton.onClick.RemoveListener(TapToStart);
@@ -44,7 +41,6 @@ public class UIManager : MonoBehaviour
         _eventBus.Unsubscribe<GameStartEvent>(OnGameStart);
         _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Unsubscribe<RestartGameEvent>(OnGameRestarted);
-        _eventBus.Unsubscribe<BlockPlacedEvent>(OnBlockPlaced);
     }
 
     private void OnGameRestarted(RestartGameEvent evt)
@@ -67,33 +63,29 @@ public class UIManager : MonoBehaviour
     private void OnGameStart(GameStartEvent evt)
     {
         hudPanel.SetActive(true);
+        ResetScoreUI();
         gameOverPanel.SetActive(false);
-        UpdateScoreUI();
-        UpdateHighScoreUI();
     }
 
     private void OnGameEnded(GameEndedEvent evt)
     {
-        UpdateHighScoreUI();
         hudPanel.SetActive(false);
         gameOverPanel.SetActive(true);
     }
-
-    private void OnBlockPlaced(BlockPlacedEvent evt)
+    
+    public void UpdateScoreUI(int currentScore)
     {
-        UpdateScoreUI();
+        scoreText.text = currentScore.ToString();
     }
-
-    private void UpdateScoreUI()
+    public void UpdateHighScoreUI(int currentHighScore)
     {
-        scoreText.text = _scoreManager.CurrentScore.ToString();
+        highScoreText.text = currentHighScore.ToString();
     }
-
-    private void UpdateHighScoreUI()
+    private void ResetScoreUI()
     {
-        highScoreText.text = _scoreManager.GetCurrentHighScoreValue().ToString();
+        scoreText.text = "0";
     }
-
+    
     private void ReloadCurrentScene()
     {
         Scene currentScene = SceneManager.GetActiveScene();

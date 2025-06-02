@@ -6,19 +6,24 @@ using VContainer;
 public class ScoreManager : MonoBehaviour
 {
     public int CurrentScore { get; private set; }
+    public int CurrentComboCount => _currentComboCount;
 
+    private int _currentComboCount;
     private IEventBus _eventBus;
-    [SerializeField,Required] private GameData _gameData;
+    private UIManager _uiManager;
+    [SerializeField, Required] private GameData _gameData;
 
     [Inject]
-    public void Construct(IEventBus eventBus)
+    public void Construct(IEventBus eventBus,UIManager uiManager)
     {
         _eventBus = eventBus;
+        _uiManager = uiManager;
     }
 
     private void OnEnable()
     {
         _eventBus.Subscribe<BlockPlacedEvent>(OnBlockPlaced);
+        _eventBus.Subscribe<PerfectPlacementEvent>(OnPerfectPlacement);
         _eventBus.Subscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Subscribe<GameStartEvent>(OnGameStart);
     }
@@ -26,6 +31,7 @@ public class ScoreManager : MonoBehaviour
     private void OnDisable()
     {
         _eventBus.Unsubscribe<BlockPlacedEvent>(OnBlockPlaced);
+        _eventBus.Unsubscribe<PerfectPlacementEvent>(OnPerfectPlacement);
         _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Unsubscribe<GameStartEvent>(OnGameStart);
     }
@@ -33,6 +39,15 @@ public class ScoreManager : MonoBehaviour
     private void OnBlockPlaced(BlockPlacedEvent evt)
     {
         CurrentScore++;
+        _currentComboCount = 0;
+        _uiManager.UpdateScoreUI(CurrentScore);
+    }
+
+    private void OnPerfectPlacement(PerfectPlacementEvent evt)
+    {
+        CurrentScore++;
+        _uiManager.UpdateScoreUI(CurrentScore);
+        _currentComboCount = (_currentComboCount > 0) ? _currentComboCount+1 : 1;
     }
 
     private void OnGameEnded(GameEndedEvent evt)
@@ -41,13 +56,17 @@ public class ScoreManager : MonoBehaviour
         {
             _gameData.highScore = CurrentScore;
         }
+        
+        _uiManager.UpdateHighScoreUI(_gameData.highScore);
     }
 
     private void OnGameStart(GameStartEvent evt)
     {
         CurrentScore = 0;
+        _currentComboCount = 0;
+        _uiManager.UpdateHighScoreUI(_gameData.highScore);
     }
-
+   
     public int GetCurrentHighScoreValue()
     {
         return _gameData.highScore;

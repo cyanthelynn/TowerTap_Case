@@ -57,12 +57,15 @@ public class SoundManager : MonoBehaviour
     private void OnEnable()
     {
         _eventBus.Subscribe<BlockPlacedEvent>(OnBlockPlaced);
+        _eventBus.Subscribe<PerfectPlacementEvent>(OnBlockPerfectPlacement);
         _eventBus.Subscribe<GameStartEvent>(OnGameStart);
         _eventBus.Subscribe<GameEndedEvent>(OnGameEnded);
     }
+    
     private void OnDisable()
     {
         _eventBus.Unsubscribe<BlockPlacedEvent>(OnBlockPlaced);
+        _eventBus.Unsubscribe<PerfectPlacementEvent>(OnBlockPerfectPlacement);
         _eventBus.Unsubscribe<GameStartEvent>(OnGameStart);
         _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
     }
@@ -74,6 +77,11 @@ public class SoundManager : MonoBehaviour
     }
 
     private void OnBlockPlaced(BlockPlacedEvent evt)
+    {
+        _currentPitch = startPitch;
+       PlayPlacementSound();
+    }
+    private void OnBlockPerfectPlacement(PerfectPlacementEvent obj)
     {
         if (Time.time - _lastPlacementTime >= resetDelay)
         {

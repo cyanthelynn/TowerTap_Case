@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Managers;
@@ -15,6 +13,8 @@ public class TowerStackManager : MonoBehaviour, IStartable
     [Inject] private ParticleManager _particleManager;
     [Inject] private CameraController _cameraController;
     [Inject] private IEventBus _eventBus;
+    [Inject] private IncreaseTextHandler _increaseTextHandler;
+    [Inject] private ScoreManager _scoreManager;
 
     private readonly Stack<Block> stackedBlocks = new Stack<Block>();
     private Block currentMovingBlock;
@@ -32,12 +32,14 @@ public class TowerStackManager : MonoBehaviour, IStartable
     private void OnGameStart(GameStartEvent evt)
     {
         isGameOver = false;
+        parameters.moveSpeed = parameters.minSpeed;
         SpawnNextMovingBlock();
     }
 
     private void OnGameEnded(GameEndedEvent evt)
     {
         _cameraController.SetPlayGameCamera(false);
+        parameters.moveSpeed = parameters.minSpeed;
     }
 
     private void OnGameRestarted(RestartGameEvent evt)
@@ -192,7 +194,6 @@ public class TowerStackManager : MonoBehaviour, IStartable
     stackedBlocks.Push(movingTransform);
     layerCount++;
     _cameraController.SetCameraHeight(lastBlock);
-    _eventBus.Publish(new BlockPlacedEvent());
     currentMovingBlock = null;
     SpawnNextMovingBlock();
 }
@@ -227,12 +228,18 @@ public class TowerStackManager : MonoBehaviour, IStartable
            Debug.Log("Perfect placement");
            last.PlayPerfectEffect();
            SnapToLast(onZ, last, moving);
+           _eventBus.Publish(new PerfectPlacementEvent());
+           
+           if (_scoreManager.CurrentComboCount > 1) { _increaseTextHandler.SpawnComboIncreaseText(last.transform.position, 2f); }
+           
+           _increaseTextHandler.SpawnPerfectIncreaseText(last.transform.position);
+
            return true;
        }
 
        PlaceSurvivingPiece(onZ, last, moving, overlapMin, overlapMax);
        DropRemovedPiece(onZ, last, moving, movingCenter, origSize, overlapMin, overlapMax);
-
+       _eventBus.Publish(new BlockPlacedEvent());
        return true;
    }
    private void SnapToLast(bool onZ, Block last, Block moving)
