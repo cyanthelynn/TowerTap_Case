@@ -7,5 +7,6 @@ namespace Managers
     public struct RestartGameEvent{}
     public struct BlockPlacedEvent { }
     public struct PerfectPlacementEvent { }
+    public struct OnMissionClaimed{}
     
 }

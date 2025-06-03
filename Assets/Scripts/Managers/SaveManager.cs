@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Managers;
 using Sirenix.OdinInspector;
@@ -23,6 +24,7 @@ public class SaveManager : MonoBehaviour
     private void Awake()
     {
         _savePath = Path.Combine(Application.persistentDataPath, "save.txt");
+        Load();
     }
 
     private void OnEnable()
@@ -47,7 +49,7 @@ public class SaveManager : MonoBehaviour
         Save();
     }
 
-    private void Save()
+    public void Save()
     {
         if (_gameData == null) return;
         EnsureSavePath();
@@ -79,6 +81,12 @@ public class SaveManager : MonoBehaviour
 
         _gameData.highScore = 0;
         _gameData.isSoundActive = true;
+        _gameData.gameCurrency = 0;
+        _gameData.totalPerfectCount = 0;
+        _gameData.maxComboCount = 0;
+        _gameData.activeMissions.Clear();
+        _gameData.completedMissions.Clear();
+        _gameData.lastMissionResetDateString = "";
 
         if (Application.isPlaying)
         {

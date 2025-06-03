@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Managers;
 using TMPro;
 using UnityEngine;
@@ -13,9 +14,21 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button tapToStartButton;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
+    [SerializeField] private TextMeshProUGUI gameCurrencyText;
 
     [SerializeField] private Button restartButton;
+    [SerializeField] private Button highScoreButton;
+    [SerializeField] private RectTransform highScoreRect;
 
+    [SerializeField] private Button settingsButton;
+    [SerializeField] private Button reloadLevelButton;
+    [SerializeField] private Button missionMenuButton;
+    [SerializeField] private Button missionMenuCloseButton;
+    [SerializeField] private RectTransform settingsRect;
+    [SerializeField] private RectTransform missionMenuRect;
+
+    private bool _isHighScoreOpen;
+    private bool _isSettingsOpen;
     private IEventBus _eventBus;
     private GameManager _gameManager;
     [Inject]
@@ -28,19 +41,73 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         tapToStartButton.onClick.AddListener(TapToStart);
+        highScoreButton.onClick.AddListener(HighScoreToggle);
+        missionMenuButton.onClick.AddListener(OpenMissionMenu);
+        missionMenuCloseButton.onClick.AddListener(MissionMenuClose);
+        settingsButton.onClick.AddListener(SettingsToggle);
         restartButton.onClick.AddListener(RestartGame);
+        reloadLevelButton.onClick.AddListener(ReloadGame);
         _eventBus.Subscribe<GameStartEvent>(OnGameStart);
         _eventBus.Subscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Subscribe<RestartGameEvent>(OnGameRestarted);
     }
     
+    private void HighScoreToggle()
+    {
+        if (!_isHighScoreOpen)
+        {
+            _isHighScoreOpen = true;
+            highScoreRect.DOAnchorPosX(0, 1).SetEase(Ease.OutBounce);
+        }
+        else
+        {
+            
+            highScoreRect.DOAnchorPosX(120, 1).SetEase(Ease.OutBounce).OnComplete((() => 
+                _isHighScoreOpen = false ));
+        }
+    }
+    private void OpenMissionMenu()
+    {
+        missionMenuRect.DOAnchorPosX(-450, 1).SetEase(Ease.OutBounce);
+        missionMenuButton.GetComponent<RectTransform>().DOAnchorPosX(60,1).SetEase(Ease.OutBounce);
+    }
+    private void MissionMenuClose()
+    {
+        missionMenuRect.DOAnchorPosX(0, 1).SetEase(Ease.OutBounce);
+        missionMenuButton.GetComponent<RectTransform>().DOAnchorPosX(-7,1).SetEase(Ease.OutBounce);
+    }
+    private void SettingsToggle()
+    {
+        if (!_isSettingsOpen)
+        {
+            _isSettingsOpen = true;
+            settingsRect.DOScaleY(1, 1).SetEase(Ease.OutBounce);
+        }
+        else
+        {
+            
+            settingsRect.DOScaleY(0, 1).SetEase(Ease.OutBounce).OnComplete((() => 
+                _isSettingsOpen = false ));
+        }
+    }
+
     private void OnDisable()
     {
         tapToStartButton.onClick.RemoveListener(TapToStart);
+        highScoreButton.onClick.RemoveListener(HighScoreToggle);
+        missionMenuButton.onClick.RemoveListener(OpenMissionMenu);
+        missionMenuCloseButton.onClick.RemoveListener(MissionMenuClose);
+        settingsButton.onClick.RemoveListener(SettingsToggle);
         restartButton.onClick.RemoveListener(RestartGame);
+        reloadLevelButton.onClick.RemoveListener(ReloadGame);
         _eventBus.Unsubscribe<GameStartEvent>(OnGameStart);
         _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Unsubscribe<RestartGameEvent>(OnGameRestarted);
+    }
+    
+    private void ReloadGame()
+    {
+        _eventBus.Publish(new RestartGameEvent());
     }
 
     private void OnGameRestarted(RestartGameEvent evt)
@@ -81,6 +148,11 @@ public class UIManager : MonoBehaviour
     {
         highScoreText.text = currentHighScore.ToString();
     }
+
+    public void UpdateGameCurrencyUI(int currentGameCurrency)
+    {
+        gameCurrencyText.text = currentGameCurrency.ToString();
+    }
     private void ResetScoreUI()
     {
         scoreText.text = "0";
@@ -91,4 +163,5 @@ public class UIManager : MonoBehaviour
         Scene currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.buildIndex);
     }
+    
 }

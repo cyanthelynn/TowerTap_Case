@@ -5,9 +5,13 @@ using VContainer.Unity;
 public class GameLifetimeScope : LifetimeScope
 {
     [SerializeField] private GameParameters gameParameters;
+    [SerializeField] private GameData gameData;
+    [SerializeField] private MissionData missionData;
     protected override void Configure(IContainerBuilder builder)
     {
         builder.RegisterInstance(gameParameters);
+        builder.RegisterInstance(gameData);
+        builder.RegisterInstance(missionData);
         builder.Register<IEventBus, EventBus>(Lifetime.Singleton);
         builder.RegisterComponentInHierarchy<SaveManager>();
         builder.RegisterComponentInHierarchy<CameraController>();
@@ -20,5 +24,6 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterComponentInHierarchy<SoundManager>();
         builder.RegisterComponentInHierarchy<IncreaseTextHandler>();
         builder.RegisterComponentInHierarchy<DifficultyManager>();
+        builder.RegisterComponentInHierarchy<MissionSystem>();
     }
 }

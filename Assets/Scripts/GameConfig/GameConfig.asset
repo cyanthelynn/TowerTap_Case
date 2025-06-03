@@ -16,7 +16,7 @@ MonoBehaviour:
   movementRange: 1.25
   moveSpeed: 1.5
   minOverlapThreshold: 0.01
-  perfectPlacementThreshold: 0.1
+  perfectPlacementThreshold: 0.025
   minSpeed: 1.5
   maxSpeed: 4
   difficultyThreshold: 200

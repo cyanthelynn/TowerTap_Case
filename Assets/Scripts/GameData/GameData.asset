@@ -14,3 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highScore: 0
   isSoundActive: 1
+  gameCurrency: 0
+  totalPerfectCount: 0
+  maxComboCount: 0
+  lastMissionResetDateString: 
+  activeMissions: []
+  completedMissions: []

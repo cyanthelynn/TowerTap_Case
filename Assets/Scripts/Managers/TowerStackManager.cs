@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Managers;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using VContainer;
 using VContainer.Unity;
 
@@ -44,6 +45,8 @@ public class TowerStackManager : MonoBehaviour, IStartable
 
     private void OnGameRestarted(RestartGameEvent evt)
     {
+        isGameOver = true;
+        poolManager.ReleaseBlock(currentMovingBlock);
         ClearTowerStack();
         InitFirstTower();
         _cameraController.SetPlayGameCamera(true);
@@ -89,8 +92,8 @@ public class TowerStackManager : MonoBehaviour, IStartable
     private void Update()
     {
         if (isGameOver) return;
-        
-        if (Input.GetMouseButtonDown(0))
+      
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject(0))
         {
             TryTrimBlock();
         }
