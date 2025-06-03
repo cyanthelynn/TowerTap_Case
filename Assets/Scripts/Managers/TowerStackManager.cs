@@ -46,7 +46,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
     private void OnGameRestarted(RestartGameEvent evt)
     {
         isGameOver = true;
-        poolManager.ReleaseBlock(currentMovingBlock);
+       if(currentMovingBlock != null) poolManager.ReleaseBlock(currentMovingBlock);
         ClearTowerStack();
         InitFirstTower();
         _cameraController.SetPlayGameCamera(true);

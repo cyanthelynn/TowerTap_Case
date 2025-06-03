@@ -19,7 +19,7 @@ MonoBehaviour:
   perfectPlacementThreshold: 0.025
   minSpeed: 1.5
   maxSpeed: 4
-  difficultyThreshold: 200
+  difficultyThreshold: 400
   difficultyCurve:
     serializedVersion: 2
     m_Curve:
