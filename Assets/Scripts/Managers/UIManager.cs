@@ -8,30 +8,37 @@ using VContainer;
 
 public class UIManager : MonoBehaviour
 {
+    [Space]
+    [Header("GameObjects REF's")]
     [SerializeField] private GameObject hudPanel;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject tapToStartPanel;
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject shopMenuPanel;
+    [Space]
+    [Header("BUTTONS REF's")]
     [SerializeField] private Button tapToStartButton;
     [SerializeField] private Button startGameButton;
     [SerializeField] private Button shopButton;
     [SerializeField] private Button closeShopButton;
+    [SerializeField] private Button settingsButton;
+    [SerializeField] private Button reloadLevelButton;
+    [SerializeField] private Button missionMenuButton;
+    [SerializeField] private Button missionMenuCloseButton;
+    [SerializeField] private Button mainMenuButton;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button highScoreButton;
+    
+    [Space]
+    [Header("TextMeshPro REF's")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private TextMeshProUGUI gameCurrencyText;
     [SerializeField] private TextMeshProUGUI shopMenuCurrencyText;
    
-
-    [SerializeField] private Button mainMenuButton;
-    [SerializeField] private Button restartButton;
-    [SerializeField] private Button highScoreButton;
+    [Space]
+    [Header("RectTransform REF's")]
     [SerializeField] private RectTransform highScoreRect;
-
-    [SerializeField] private Button settingsButton;
-    [SerializeField] private Button reloadLevelButton;
-    [SerializeField] private Button missionMenuButton;
-    [SerializeField] private Button missionMenuCloseButton;
     [SerializeField] private RectTransform settingsRect;
     [SerializeField] private RectTransform missionMenuRect;
 
@@ -62,6 +69,23 @@ public class UIManager : MonoBehaviour
         _eventBus.Subscribe<GameStartEvent>(OnGameStart);
         _eventBus.Subscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Subscribe<RestartGameEvent>(OnGameRestarted);
+    }
+    private void OnDisable()
+    {
+        tapToStartButton.onClick.RemoveListener(TapToStart);
+        highScoreButton.onClick.RemoveListener(HighScoreToggle);
+        missionMenuButton.onClick.RemoveListener(OpenMissionMenu);
+        shopButton.onClick.RemoveListener(OpenShopMenu);
+        mainMenuButton.onClick.RemoveListener(BackMainMenu);
+        closeShopButton.onClick.RemoveListener(CloseShopMenu);
+        startGameButton.onClick.RemoveListener(MenuStartGame);
+        missionMenuCloseButton.onClick.RemoveListener(MissionMenuClose);
+        settingsButton.onClick.RemoveListener(SettingsToggle);
+        restartButton.onClick.RemoveListener(RestartGame);
+        reloadLevelButton.onClick.RemoveListener(ReloadGame);
+        _eventBus.Unsubscribe<GameStartEvent>(OnGameStart);
+        _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
+        _eventBus.Unsubscribe<RestartGameEvent>(OnGameRestarted);
     }
     
     private void HighScoreToggle()
@@ -102,25 +126,7 @@ public class UIManager : MonoBehaviour
                 _isSettingsOpen = false ));
         }
     }
-
-    private void OnDisable()
-    {
-        tapToStartButton.onClick.RemoveListener(TapToStart);
-        highScoreButton.onClick.RemoveListener(HighScoreToggle);
-        missionMenuButton.onClick.RemoveListener(OpenMissionMenu);
-        shopButton.onClick.RemoveListener(OpenShopMenu);
-        mainMenuButton.onClick.RemoveListener(BackMainMenu);
-        closeShopButton.onClick.RemoveListener(CloseShopMenu);
-        startGameButton.onClick.RemoveListener(MenuStartGame);
-        missionMenuCloseButton.onClick.RemoveListener(MissionMenuClose);
-        settingsButton.onClick.RemoveListener(SettingsToggle);
-        restartButton.onClick.RemoveListener(RestartGame);
-        reloadLevelButton.onClick.RemoveListener(ReloadGame);
-        _eventBus.Unsubscribe<GameStartEvent>(OnGameStart);
-        _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
-        _eventBus.Unsubscribe<RestartGameEvent>(OnGameRestarted);
-    }
-
+    
     private void BackMainMenu()
     {
         CloseShopMenu();

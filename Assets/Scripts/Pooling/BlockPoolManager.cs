@@ -9,6 +9,11 @@ public class BlockPoolManager : MonoBehaviour
 
     private void Awake()
     {
+        CreateNewBlockPool();
+    }
+
+    private void CreateNewBlockPool()
+    {
         blockPool = new ObjectPool<Block>(
             createFunc: () =>
             {
@@ -20,8 +25,8 @@ public class BlockPoolManager : MonoBehaviour
             actionOnRelease: obj => obj.gameObject.SetActive(false),
             actionOnDestroy: obj => Destroy(obj),
             collectionCheck: false,
-            defaultCapacity: 1000,
-            maxSize: 10000
+            defaultCapacity: 100,
+            maxSize: 1000
         );
     }
 
@@ -33,11 +38,13 @@ public class BlockPoolManager : MonoBehaviour
         block.SetKinematic(true);
         blockPool.Release(block);
     } 
-    
-    public void SetBlockPrefabMaterial(Material mat)
+    public void SetBlockPrefabColor(Color color)
     {
-        if (blockPrefab == null || mat == null) return;
+        if (blockPrefab == null) return;
         var renderer = blockPrefab.GetComponent<Renderer>();
-        if (renderer != null) renderer.sharedMaterial = mat;
+        if (renderer != null && renderer.sharedMaterial != null)
+        {
+            renderer.sharedMaterial.color = color;
+        }
     }
 }

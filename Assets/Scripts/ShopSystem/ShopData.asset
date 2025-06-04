@@ -13,48 +13,33 @@ MonoBehaviour:
   m_Name: ShopData
   m_EditorClassIdentifier: 
   shopDefinitions:
-  - icon: {fileID: 0}
-    price: 10
-    previewMaterial: {fileID: 2100000, guid: 1896f2f866b5d40a79d055802c38d437, type: 2}
-  - icon: {fileID: 0}
-    price: 15
-    previewMaterial: {fileID: 2100000, guid: 7e09d5c13c27546c995122a5def550f3, type: 2}
-  - icon: {fileID: 0}
-    price: 20
-    previewMaterial: {fileID: 2100000, guid: 25fc6beeb83e34ad8ac70167b94b7090, type: 2}
-  - icon: {fileID: 0}
-    price: 25
-    previewMaterial: {fileID: 2100000, guid: d9f9398a7659f4ef4a2f5f520b4b8829, type: 2}
-  - icon: {fileID: 0}
-    price: 30
-    previewMaterial: {fileID: 2100000, guid: 55d29d58a60aa4f73bec64eed670c5d0, type: 2}
-  - icon: {fileID: 0}
-    price: 35
-    previewMaterial: {fileID: 2100000, guid: 003fb7b90cc2f420cb602f49f7434d5a, type: 2}
-  - icon: {fileID: 0}
-    price: 40
-    previewMaterial: {fileID: 2100000, guid: 3fc37f148a89d465090d89a8f8355393, type: 2}
-  - icon: {fileID: 0}
-    price: 50
-    previewMaterial: {fileID: 2100000, guid: 87f5ecbc91cc94599bceab54954d20bb, type: 2}
-  - icon: {fileID: 0}
-    price: 100
-    previewMaterial: {fileID: 2100000, guid: a7be726f159af47ff960b617e0fb07f1, type: 2}
-  - icon: {fileID: 0}
-    price: 150
-    previewMaterial: {fileID: 2100000, guid: e9844300721ea4bf49fcc814eeb4c27b, type: 2}
-  - icon: {fileID: 0}
-    price: 200
-    previewMaterial: {fileID: 2100000, guid: 1896f2f866b5d40a79d055802c38d437, type: 2}
-  - icon: {fileID: 0}
-    price: 300
-    previewMaterial: {fileID: 2100000, guid: 003fb7b90cc2f420cb602f49f7434d5a, type: 2}
-  - icon: {fileID: 0}
-    price: 400
-    previewMaterial: {fileID: 2100000, guid: 55d29d58a60aa4f73bec64eed670c5d0, type: 2}
-  - icon: {fileID: 0}
-    price: 500
-    previewMaterial: {fileID: 2100000, guid: a7be726f159af47ff960b617e0fb07f1, type: 2}
-  - icon: {fileID: 0}
-    price: 600
-    previewMaterial: {fileID: 2100000, guid: 7e09d5c13c27546c995122a5def550f3, type: 2}
+  - price: 10
+    color: {r: 0.4716981, g: 0.17577429, b: 0.17577429, a: 0}
+  - price: 15
+    color: {r: 0.18936723, g: 0.6320754, b: 0.10435206, a: 0}
+  - price: 20
+    color: {r: 0.16233535, g: 0.2591014, b: 0.6037736, a: 0}
+  - price: 25
+    color: {r: 0.20195976, g: 0.042274818, b: 0.4716981, a: 0}
+  - price: 30
+    color: {r: 0.8018868, g: 0.76608115, b: 0.35933605, a: 0}
+  - price: 35
+    color: {r: 0.25698647, g: 0.7075472, b: 0.61295533, a: 0}
+  - price: 40
+    color: {r: 0.40964684, g: 0.5, b: 0.10613209, a: 0}
+  - price: 50
+    color: {r: 0.32116097, g: 0.509434, b: 0.1994482, a: 0}
+  - price: 100
+    color: {r: 0.6603774, g: 0.04049486, b: 0.04049486, a: 0}
+  - price: 150
+    color: {r: 0.09491418, g: 0.08677466, b: 0.4716981, a: 0}
+  - price: 200
+    color: {r: 0.6415094, g: 0.45087218, b: 0.45087218, a: 0}
+  - price: 300
+    color: {r: 0.079476684, g: 0.3584906, b: 0.28316283, a: 0}
+  - price: 400
+    color: {r: 0.3792005, g: 0.16789782, b: 0.46226418, a: 0}
+  - price: 500
+    color: {r: 0.4811321, g: 0.16113387, b: 0.46555632, a: 0}
+  - price: 600
+    color: {r: 0.24528301, g: 0.0752047, b: 0.0752047, a: 0}

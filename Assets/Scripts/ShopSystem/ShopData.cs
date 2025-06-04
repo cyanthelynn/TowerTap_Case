@@ -10,7 +10,6 @@ public class ShopData : ScriptableObject
 [System.Serializable]
 public struct ShopDefinition
 {
-    public Sprite icon;
     public int price;
-    public Material previewMaterial;
+    public Color color;
 }

@@ -31,7 +31,6 @@ public class ShopSystem : MonoBehaviour
         _eventBus.Subscribe<StartFromMainMenuEvent>(StartGameEvent);
         _eventBus.Subscribe<BackMainMenuEvent>(BackToMenu);
     }
-
     private void OnDisable()
     {
         _eventBus.Unsubscribe<DataChangedEvent>(OnDataChanged);
@@ -41,29 +40,30 @@ public class ShopSystem : MonoBehaviour
 
     private void BackToMenu(BackMainMenuEvent obj)
     {
-        if(_previewInstance != null) _previewInstance.SetActive(true);
+        if (_previewInstance != null)
+            _previewInstance.SetActive(true);
     }
 
     private void StartGameEvent(StartFromMainMenuEvent obj)
     {
-        if(_previewInstance != null) _previewInstance.SetActive(false);
+        if (_previewInstance != null)
+            _previewInstance.SetActive(false);
     }
 
     private void Start()
     {
-        ApplyEquippedMaterialToPoolPrefab();
-        
+        ApplyEquippedColorToPoolPrefab();
         GenerateShopUI();
         InstantiatePreview();
-        ApplyEquippedMaterialToPreview();
+        ApplyEquippedColorToPreview();
     }
-    
+
     private void GenerateShopUI()
     {
         foreach (Transform child in shopListParent)
             Destroy(child.gameObject);
         _spawnedItems.Clear();
-
+        
         for (int i = 0; i < shopData.shopDefinitions.Count; i++)
         {
             var def = shopData.shopDefinitions[i];
@@ -73,8 +73,8 @@ public class ShopSystem : MonoBehaviour
             var item = Instantiate(shopItemPrefab, shopListParent);
             item.Setup(
                 i,
-                def.icon,
                 def.price,
+                def.color, 
                 isCollected,
                 isEquipped,
                 OnShopPurchase,
@@ -91,19 +91,14 @@ public class ShopSystem : MonoBehaviour
         if (_gameData.gameCurrency < def.price) 
             return;
 
-        _gameData.gameCurrency    -= def.price;
+        _gameData.gameCurrency -= def.price;
         _gameData.collectedShopItems.Add(index);
         _eventBus.Publish(new DataChangedEvent());
         _uiManager.UpdateGameCurrencyUI(_gameData.gameCurrency);
-
+        
         if (_spawnedItems.TryGetValue(index, out var item))
         {
-            item.Setup(
-                index,
-                def.icon,
-                def.price,
-                true,   
-                false, 
+            item.Setup(index, def.price, def.color, true, false,  
                 OnShopPurchase,
                 OnShopEquip,
                 _gameData.gameCurrency
@@ -117,10 +112,11 @@ public class ShopSystem : MonoBehaviour
         _eventBus.Publish(new DataChangedEvent());
         _uiManager.UpdateGameCurrencyUI(_gameData.gameCurrency);
         
-        ApplyEquippedMaterialToPoolPrefab();
+        ApplyEquippedColorToPoolPrefab();
         
         _eventBus.Publish(new BlockSkinChangedEvent());
-        ApplyEquippedMaterialToPreview();
+        
+        ApplyEquippedColorToPreview();
         
         GenerateShopUI();
     }
@@ -130,23 +126,12 @@ public class ShopSystem : MonoBehaviour
         foreach (var kvp in _spawnedItems)
         {
             int idx = kvp.Key;
-            var def = shopData.shopDefinitions[idx];
             var item = kvp.Value;
-
             bool isCollected = _gameData.collectedShopItems.Contains(idx);
-            bool isEquipped  = (_gameData.selectedSkinIndex == idx);
-
+            
             if (!isCollected)
             {
                 item.UpdatePurchaseInteractable(_gameData.gameCurrency);
-            }
-            else if (isCollected && !isEquipped)
-            {
-                // Burada “Equip” butonları etkin kalsın
-            }
-            else /* isEquipped */
-            {
-                // “Equipped” satır, zaten butonlar kapalı
             }
         }
     }
@@ -154,12 +139,10 @@ public class ShopSystem : MonoBehaviour
     private void InstantiatePreview()
     {
         if (blockPreviewPrefab == null || previewParent == null) return;
-        if (_previewInstance != null)
-        {
-            Destroy(_previewInstance);
-            _previewInstance = null;
-        }
 
+        if (_previewInstance != null)
+            Destroy(_previewInstance);
+        
         _previewInstance = Instantiate(
             blockPreviewPrefab,
             previewParent.position,
@@ -168,6 +151,7 @@ public class ShopSystem : MonoBehaviour
         );
         _previewInstance.transform.localPosition = new Vector3(0, 2, 0);
         _previewInstance.transform.localRotation = Quaternion.identity;
+        
         _previewInstance.transform.DORotate(
             new Vector3(0f, 360f, 0f),
             8f,
@@ -175,29 +159,28 @@ public class ShopSystem : MonoBehaviour
         ).SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
     }
 
-    private void ApplyEquippedMaterialToPreview()
+    private void ApplyEquippedColorToPreview()
     {
         if (_previewInstance == null) return;
         int eqIdx = _gameData.selectedSkinIndex;
         if (eqIdx < 0 || eqIdx >= shopData.shopDefinitions.Count) return;
-        var def = shopData.shopDefinitions[eqIdx];
-        if (def.previewMaterial == null) return;
 
+        var def = shopData.shopDefinitions[eqIdx];
         var renderers = _previewInstance.GetComponentsInChildren<Renderer>();
         foreach (var rend in renderers)
         {
-            rend.material = def.previewMaterial;
+            rend.material.color = def.color;
         }
     }
 
-    private void ApplyEquippedMaterialToPoolPrefab()
+    private void ApplyEquippedColorToPoolPrefab()
     {
         int eqIdx = _gameData.selectedSkinIndex;
         if (eqIdx < 0 || eqIdx >= shopData.shopDefinitions.Count) return;
-        var def = shopData.shopDefinitions[eqIdx];
-        if (def.previewMaterial == null) return;
 
-        _blockPoolManager.SetBlockPrefabMaterial(def.previewMaterial);
+        var def = shopData.shopDefinitions[eqIdx];
+        Color chosenColor = def.color;
+        
+        _blockPoolManager.SetBlockPrefabColor(chosenColor);
     }
-    
 }

@@ -116,7 +116,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 574106800703703346}
   m_OnClick:
     m_PersistentCalls:
@@ -155,8 +155,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 27.5}
-  m_SizeDelta: {x: 30, y: 30}
+  m_AnchoredPosition: {x: 0, y: 25}
+  m_SizeDelta: {x: 50, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5553930137157296331
 CanvasRenderer:
@@ -186,8 +186,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -379,7 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bae46104a47c4c67ac6ed877aeb9cad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iconImage: {fileID: 1860586307580026621}
+  colorSwatch: {fileID: 1860586307580026621}
   priceText: {fileID: 3772530548783218184}
   purchaseButton: {fileID: 581227980275615260}
   collectedText: {fileID: 9012757346596860047}
@@ -934,7 +934,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 45.014225, y: 31.67613, z: 54.262856, w: 0}
+  m_margin: {x: 45.014225, y: 31.67613, z: 54.262856, w: -9.940186}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1141,7 +1141,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c839bf609b3a9481cbc536eb653b7241, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6b6359a5eb3ee4f05abcc22ddd6cff72, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1227,10 +1227,10 @@ RectTransform:
   m_Children:
   - {fileID: 5432666832429787261}
   - {fileID: 3685081424688424150}
-  - {fileID: 1075866897321572060}
   - {fileID: 178257266207289007}
   - {fileID: 1194711764596734921}
   - {fileID: 5353111294597403695}
+  - {fileID: 1075866897321572060}
   m_Father: {fileID: 1488696875713688149}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
