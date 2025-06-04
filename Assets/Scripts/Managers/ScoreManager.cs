@@ -81,6 +81,7 @@ public class ScoreManager : MonoBehaviour
         }
         
         _uiManager.UpdateHighScoreUI(_gameData.highScore);
+        _uiManager.UpdateGameOverTextsUI(CurrentScore,_gameData.highScore);
     }
 
     private void OnGameStart(GameStartEvent evt)

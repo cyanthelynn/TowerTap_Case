@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button missionMenuButton;
     [SerializeField] private Button missionMenuCloseButton;
     [SerializeField] private Button mainMenuButton;
+    [SerializeField] private Button backToMainMenuButton;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button highScoreButton;
     
@@ -35,6 +36,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private TextMeshProUGUI gameCurrencyText;
     [SerializeField] private TextMeshProUGUI shopMenuCurrencyText;
+    [SerializeField] private TextMeshProUGUI gameOverScoreText;
+    [SerializeField] private TextMeshProUGUI gameOverHighScoreText;
    
     [Space]
     [Header("RectTransform REF's")]
@@ -57,6 +60,7 @@ public class UIManager : MonoBehaviour
     {
         tapToStartButton.onClick.AddListener(TapToStart);
         highScoreButton.onClick.AddListener(HighScoreToggle);
+        backToMainMenuButton.onClick.AddListener(BackToMainMenuInGame);
         missionMenuButton.onClick.AddListener(OpenMissionMenu);
         shopButton.onClick.AddListener(OpenShopMenu);
         mainMenuButton.onClick.AddListener(BackMainMenu);
@@ -76,6 +80,7 @@ public class UIManager : MonoBehaviour
         highScoreButton.onClick.RemoveListener(HighScoreToggle);
         missionMenuButton.onClick.RemoveListener(OpenMissionMenu);
         shopButton.onClick.RemoveListener(OpenShopMenu);
+        backToMainMenuButton.onClick.RemoveListener(BackToMainMenuInGame);
         mainMenuButton.onClick.RemoveListener(BackMainMenu);
         closeShopButton.onClick.RemoveListener(CloseShopMenu);
         startGameButton.onClick.RemoveListener(MenuStartGame);
@@ -87,7 +92,12 @@ public class UIManager : MonoBehaviour
         _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Unsubscribe<RestartGameEvent>(OnGameRestarted);
     }
-    
+
+    private void BackToMainMenuInGame()
+    {
+        BackMainMenu();
+    }
+
     private void HighScoreToggle()
     {
         if (!_isHighScoreOpen)
@@ -129,6 +139,7 @@ public class UIManager : MonoBehaviour
     
     private void BackMainMenu()
     {
+        CloseGameHUD();
         CloseShopMenu();
         gameOverPanel.SetActive(false);
         _eventBus.Publish(new BackMainMenuEvent());
@@ -145,6 +156,10 @@ public class UIManager : MonoBehaviour
         shopMenuPanel.SetActive(false);
     }
 
+    private void CloseGameHUD()
+    {
+        hudPanel.SetActive(false);
+    }
     private void MenuStartGame()
     {
         _eventBus.Publish(new StartFromMainMenuEvent());
@@ -201,6 +216,12 @@ public class UIManager : MonoBehaviour
     {
         gameCurrencyText.text = currentGameCurrency.ToString();
         shopMenuCurrencyText.text = currentGameCurrency.ToString();
+    }
+
+    public void UpdateGameOverTextsUI(int currentScore, int currentHighScore)
+    {
+        gameOverScoreText.text = currentScore.ToString();
+        gameOverHighScoreText.text = currentHighScore.ToString();
     }
     private void ResetScoreUI()
     {

@@ -410,7 +410,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
         if (isGameOver) return;
         
         if(currentMovingBlock !=null) poolManager.ReleaseBlock(currentMovingBlock);
-        
+
         var lastBlock = stackedBlocks.Peek();
         Vector3 spawnScale = default;
         CalculateSpawnScale(lastBlock, ref spawnScale);
@@ -419,6 +419,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
         DetermineSpawnParameters(lastBlock, ref spawnPos, ref moveDirection);
         
         currentMovingBlock = poolManager.GetBlock();
+        currentMovingBlock.SetKinematic(true);
         
         int skinIndex = _gameData.selectedSkinIndex;
         if (skinIndex >= 0 && skinIndex < _shopData.shopDefinitions.Count)
