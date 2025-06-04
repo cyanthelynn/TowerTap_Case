@@ -1,4 +1,3 @@
-// Event Definitions
 
 namespace Managers
 {
@@ -7,10 +6,11 @@ namespace Managers
     public struct RestartGameEvent{}
     
     public struct BackMainMenuEvent{}
+    public struct StartFromMainMenuEvent{}
     public struct BlockPlacedEvent { }
     public struct PerfectPlacementEvent { }
     public struct OnMissionClaimed{}
-    public class DataChangedEvent { }
+    public struct DataChangedEvent { }
+    public struct BlockSkinChangedEvent { }
 
-    
 }

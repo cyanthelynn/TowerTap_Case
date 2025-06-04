@@ -15,19 +15,46 @@ MonoBehaviour:
   shopDefinitions:
   - icon: {fileID: 0}
     price: 10
+    previewMaterial: {fileID: 2100000, guid: 1896f2f866b5d40a79d055802c38d437, type: 2}
   - icon: {fileID: 0}
     price: 15
+    previewMaterial: {fileID: 2100000, guid: 7e09d5c13c27546c995122a5def550f3, type: 2}
   - icon: {fileID: 0}
     price: 20
+    previewMaterial: {fileID: 2100000, guid: 25fc6beeb83e34ad8ac70167b94b7090, type: 2}
   - icon: {fileID: 0}
     price: 25
+    previewMaterial: {fileID: 2100000, guid: d9f9398a7659f4ef4a2f5f520b4b8829, type: 2}
   - icon: {fileID: 0}
     price: 30
+    previewMaterial: {fileID: 2100000, guid: 55d29d58a60aa4f73bec64eed670c5d0, type: 2}
   - icon: {fileID: 0}
     price: 35
+    previewMaterial: {fileID: 2100000, guid: 003fb7b90cc2f420cb602f49f7434d5a, type: 2}
   - icon: {fileID: 0}
     price: 40
+    previewMaterial: {fileID: 2100000, guid: 3fc37f148a89d465090d89a8f8355393, type: 2}
   - icon: {fileID: 0}
     price: 50
+    previewMaterial: {fileID: 2100000, guid: 87f5ecbc91cc94599bceab54954d20bb, type: 2}
   - icon: {fileID: 0}
     price: 100
+    previewMaterial: {fileID: 2100000, guid: a7be726f159af47ff960b617e0fb07f1, type: 2}
+  - icon: {fileID: 0}
+    price: 150
+    previewMaterial: {fileID: 2100000, guid: e9844300721ea4bf49fcc814eeb4c27b, type: 2}
+  - icon: {fileID: 0}
+    price: 200
+    previewMaterial: {fileID: 2100000, guid: 1896f2f866b5d40a79d055802c38d437, type: 2}
+  - icon: {fileID: 0}
+    price: 300
+    previewMaterial: {fileID: 2100000, guid: 003fb7b90cc2f420cb602f49f7434d5a, type: 2}
+  - icon: {fileID: 0}
+    price: 400
+    previewMaterial: {fileID: 2100000, guid: 55d29d58a60aa4f73bec64eed670c5d0, type: 2}
+  - icon: {fileID: 0}
+    price: 500
+    previewMaterial: {fileID: 2100000, guid: a7be726f159af47ff960b617e0fb07f1, type: 2}
+  - icon: {fileID: 0}
+    price: 600
+    previewMaterial: {fileID: 2100000, guid: 7e09d5c13c27546c995122a5def550f3, type: 2}

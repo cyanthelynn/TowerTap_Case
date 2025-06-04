@@ -16,7 +16,9 @@ public class TowerStackManager : MonoBehaviour, IStartable
     [Inject] private IEventBus _eventBus;
     [Inject] private IncreaseTextHandler _increaseTextHandler;
     [Inject] private ScoreManager _scoreManager;
-
+    [Inject] private GameData _gameData;
+    [Inject] private ShopData _shopData;
+    
     private readonly Stack<Block> stackedBlocks = new Stack<Block>();
     private readonly List<Block> _spawnedBlocks = new List<Block>();
     private Block currentMovingBlock;
@@ -29,6 +31,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
     {
         _eventBus.Subscribe<GameStartEvent>(OnGameStart);
         _eventBus.Subscribe<GameEndedEvent>(OnGameEnded);
+        _eventBus.Subscribe<BlockSkinChangedEvent>(OnBlockSkinChanged);
         _eventBus.Subscribe<RestartGameEvent>(OnGameRestarted);
         _eventBus.Subscribe<BackMainMenuEvent>(BackToMainMenu);
     }
@@ -75,6 +78,39 @@ public class TowerStackManager : MonoBehaviour, IStartable
         _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Unsubscribe<RestartGameEvent>(OnGameRestarted);
         _eventBus.Unsubscribe<BackMainMenuEvent>(BackToMainMenu);
+        _eventBus.Unsubscribe<BlockSkinChangedEvent>(OnBlockSkinChanged);
+    }
+
+    private void OnBlockSkinChanged(BlockSkinChangedEvent obj)
+    {
+        
+        
+            foreach (var blk in stackedBlocks)
+            {
+                ApplyMaterialToInstance(blk);
+            }
+            
+            foreach (var blk in _spawnedBlocks)
+            {
+                ApplyMaterialToInstance(blk);
+            }
+            
+            if (currentMovingBlock != null)
+            {
+                ApplyMaterialToInstance(currentMovingBlock);
+            }
+        
+
+    }
+    private void ApplyMaterialToInstance(Block blockInstance)
+    {
+        int eqIdx = _gameData.selectedSkinIndex;
+        if (eqIdx < 0 || eqIdx >= _shopData.shopDefinitions.Count) return;
+        var def = _shopData.shopDefinitions[eqIdx];
+        if (def.previewMaterial == null) return;
+
+        var renderer = blockInstance.GetComponent<Renderer>();
+        if(renderer!=null)   renderer.material = def.previewMaterial;
     }
 
     private void BackToMainMenu(BackMainMenuEvent evt)
@@ -100,6 +136,8 @@ public class TowerStackManager : MonoBehaviour, IStartable
         InitFirstTower();
         
         _cameraController.SetPlayGameCamera(true);
+        
+        _eventBus.Publish(new DataChangedEvent());
     }
 
     public void Start()
@@ -111,6 +149,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
     {
         Vector3 basePos = new Vector3(0, -0.45f, 0);
         var baseBlock = poolManager.GetBlock();
+        ApplyMaterialToInstance(baseBlock);
         baseBlock.transform.SetParent(transform, false);
         baseBlock.transform.localPosition = basePos;
         baseBlock.transform.localScale = new Vector3(1f, 1, 1f);
@@ -130,8 +169,6 @@ public class TowerStackManager : MonoBehaviour, IStartable
         
         layerCount = 0;
     }
-
-
     
     private void RemoveBlocks(Block block)
     {
@@ -195,13 +232,15 @@ public class TowerStackManager : MonoBehaviour, IStartable
         DetermineSpawnParameters(ref lastBlock, ref spawnPos, ref moveDirection);
 
         currentMovingBlock = poolManager.GetBlock();
+        
         currentMovingBlock.transform.SetParent(transform, false);
         currentMovingBlock.transform.localPosition = spawnPos;
         currentMovingBlock.transform.localScale = spawnScale;
         
         MoveBlock();
     }
-
+   
+    
     private void CalculateSpawnScale(ref Block lastBlock, ref Vector3 spawnScale)
     {
         float xScale = lastBlock.transform.localScale.x;

@@ -21,3 +21,4 @@ MonoBehaviour:
   activeMissions: []
   completedMissions: []
   collectedShopItems: 
+  selectedSkinIndex: -1

@@ -7,11 +7,13 @@ public class GameLifetimeScope : LifetimeScope
     [SerializeField] private GameParameters gameParameters;
     [SerializeField] private GameData gameData;
     [SerializeField] private MissionData missionData;
+    [SerializeField] private ShopData shopData;
     protected override void Configure(IContainerBuilder builder)
     {
         builder.RegisterInstance(gameParameters);
         builder.RegisterInstance(gameData);
         builder.RegisterInstance(missionData);
+        builder.RegisterInstance(shopData);
         builder.Register<IEventBus, EventBus>(Lifetime.Singleton);
         builder.RegisterComponentInHierarchy<SaveManager>();
         builder.RegisterComponentInHierarchy<CameraController>();

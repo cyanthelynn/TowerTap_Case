@@ -27,4 +27,5 @@ public class GameData : ScriptableObject
     [Header("SHOP DATA")]
     [Space]
     public List<int> collectedShopItems = new List<int>();
+    public int selectedSkinIndex = -1; 
 }

@@ -141,6 +141,7 @@ public class UIManager : MonoBehaviour
 
     private void MenuStartGame()
     {
+        _eventBus.Publish(new StartFromMainMenuEvent());
         mainMenuPanel.SetActive(false);
         gameOverPanel.SetActive(false);
         tapToStartPanel.transform.gameObject.SetActive(true);

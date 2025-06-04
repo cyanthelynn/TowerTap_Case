@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,9 +7,10 @@ public class ShopData : ScriptableObject
     public List<ShopDefinition> shopDefinitions = new List<ShopDefinition>();
 }
 
-[Serializable]
+[System.Serializable]
 public struct ShopDefinition
 {
     public Sprite icon;
     public int price;
+    public Material previewMaterial;
 }

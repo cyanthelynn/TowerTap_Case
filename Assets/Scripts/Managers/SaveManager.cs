@@ -94,6 +94,7 @@ public class SaveManager : MonoBehaviour
         _gameData.activeMissions.Clear();
         _gameData.completedMissions.Clear();
         _gameData.collectedShopItems.Clear();
+        _gameData.selectedSkinIndex = -1;
         _gameData.lastMissionResetDateString = "";
 
         if (Application.isPlaying)
