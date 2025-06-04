@@ -18,6 +18,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
     [Inject] private ScoreManager _scoreManager;
 
     private readonly Stack<Block> stackedBlocks = new Stack<Block>();
+    private readonly List<Block> _spawnedBlocks = new List<Block>();
     private Block currentMovingBlock;
     private int layerCount;
     private bool isGameOver;
@@ -29,6 +30,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
         _eventBus.Subscribe<GameStartEvent>(OnGameStart);
         _eventBus.Subscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Subscribe<RestartGameEvent>(OnGameRestarted);
+        _eventBus.Subscribe<BackMainMenuEvent>(BackToMainMenu);
     }
     private void OnGameStart(GameStartEvent evt)
     {
@@ -46,19 +48,60 @@ public class TowerStackManager : MonoBehaviour, IStartable
     private void OnGameRestarted(RestartGameEvent evt)
     {
         isGameOver = true;
-       if(currentMovingBlock != null) poolManager.ReleaseBlock(currentMovingBlock);
+        
+        if (currentMovingBlock != null)
+        {
+            poolManager.ReleaseBlock(currentMovingBlock);
+            currentMovingBlock = null;
+        }
+        
+        foreach (var block in _spawnedBlocks)
+        {
+            if(_spawnedBlocks.Contains(block)) poolManager.ReleaseBlock(block);
+        }
+        _spawnedBlocks.Clear();
+        
         ClearTowerStack();
+        
+        layerCount = 0;
+       
         InitFirstTower();
         _cameraController.SetPlayGameCamera(true);
     }
-
+    
     private void OnDisable()
     {
         _eventBus.Unsubscribe<GameStartEvent>(OnGameStart);
         _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Unsubscribe<RestartGameEvent>(OnGameRestarted);
+        _eventBus.Unsubscribe<BackMainMenuEvent>(BackToMainMenu);
     }
-    
+
+    private void BackToMainMenu(BackMainMenuEvent evt)
+    {
+        isGameOver = true;
+        
+        if (currentMovingBlock != null)
+        {
+            poolManager.ReleaseBlock(currentMovingBlock);
+            currentMovingBlock = null;
+        }
+        
+        foreach (var block in _spawnedBlocks)
+        {
+            if(_spawnedBlocks.Contains(block)) poolManager.ReleaseBlock(block);
+        }
+        _spawnedBlocks.Clear();
+        
+        ClearTowerStack();
+        
+        layerCount = 0;
+        
+        InitFirstTower();
+        
+        _cameraController.SetPlayGameCamera(true);
+    }
+
     public void Start()
     {
         InitFirstTower();
@@ -81,10 +124,15 @@ public class TowerStackManager : MonoBehaviour, IStartable
         foreach (var block in stackedBlocks)
         {
             RemoveBlocks(block);
+            _spawnedBlocks.Remove(block);
         }
         stackedBlocks.Clear();
+        
+        layerCount = 0;
     }
 
+
+    
     private void RemoveBlocks(Block block)
     {
         poolManager.ReleaseBlock(block);
@@ -101,7 +149,11 @@ public class TowerStackManager : MonoBehaviour, IStartable
 
     private void OnTriggerEnter(Collider other)
     {
-         other.TryGetComponent(out Block block); { poolManager.ReleaseBlock(block); }
+         other.TryGetComponent(out Block block);
+         {
+             poolManager.ReleaseBlock(block);
+             _spawnedBlocks.Remove(block);
+         }
     }
 
     private Tween _moveTween;
@@ -134,6 +186,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
     private bool IsMovingOnZ() => moveDirection.z != 0f;
     private void SpawnNextMovingBlock()
     {
+        if (isGameOver) return;
         var lastBlock = stackedBlocks.Peek();
         Vector3 spawnScale = default;
         Vector3 spawnPos = default;
@@ -326,6 +379,7 @@ private void DropRemovedPiece(
         dropCenter = (dropMin + dropMax) * 0.5f;
 
         var dropped = poolManager.GetBlock();
+        _spawnedBlocks.Add(dropped);
         dropped.transform.SetParent(transform, false);
         dropped.transform.localScale = new Vector3(last.transform.localScale.x, parameters.blockHeight, removedSize);
         dropped.transform.localPosition = new Vector3(last.transform.localPosition.x, moving.transform.localPosition.y, dropCenter);
@@ -343,11 +397,13 @@ private void DropRemovedPiece(
         dropCenter = (dropMin + dropMax) * 0.5f;
 
         var dropped = poolManager.GetBlock();
+        _spawnedBlocks.Add(dropped);
         dropped.transform.SetParent(transform, false);
         dropped.transform.localScale = new Vector3(removedSize, parameters.blockHeight, last.transform.localScale.z);
         dropped.transform.localPosition = new Vector3(dropCenter, moving.transform.localPosition.y, last.transform.localPosition.z);
         dropped.SetKinematic(false);
     }
+    
 }
 
 }

@@ -1,3 +1,4 @@
+using System;
 using Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -19,6 +20,11 @@ public class ScoreManager : MonoBehaviour
     {
         _eventBus = eventBus;
         _uiManager = uiManager;
+    }
+
+    private void Start()
+    {
+        _uiManager.UpdateGameCurrencyUI(_gameData.gameCurrency);
     }
 
     private void OnEnable()

@@ -19,8 +19,8 @@ public class BlockPoolManager : MonoBehaviour
             actionOnRelease: obj => obj.gameObject.SetActive(false),
             actionOnDestroy: obj => Destroy(obj),
             collectionCheck: false,
-            defaultCapacity: 100,
-            maxSize: 10000
+            defaultCapacity: 1000,
+            maxSize: 2000
         );
     }
 

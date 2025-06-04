@@ -11,11 +11,19 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject hudPanel;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject tapToStartPanel;
+    [SerializeField] private GameObject mainMenuPanel;
+    [SerializeField] private GameObject shopMenuPanel;
     [SerializeField] private Button tapToStartButton;
+    [SerializeField] private Button startGameButton;
+    [SerializeField] private Button shopButton;
+    [SerializeField] private Button closeShopButton;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private TextMeshProUGUI gameCurrencyText;
+    [SerializeField] private TextMeshProUGUI shopMenuCurrencyText;
+   
 
+    [SerializeField] private Button mainMenuButton;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button highScoreButton;
     [SerializeField] private RectTransform highScoreRect;
@@ -43,6 +51,10 @@ public class UIManager : MonoBehaviour
         tapToStartButton.onClick.AddListener(TapToStart);
         highScoreButton.onClick.AddListener(HighScoreToggle);
         missionMenuButton.onClick.AddListener(OpenMissionMenu);
+        shopButton.onClick.AddListener(OpenShopMenu);
+        mainMenuButton.onClick.AddListener(BackMainMenu);
+        closeShopButton.onClick.AddListener(CloseShopMenu);
+        startGameButton.onClick.AddListener(MenuStartGame);
         missionMenuCloseButton.onClick.AddListener(MissionMenuClose);
         settingsButton.onClick.AddListener(SettingsToggle);
         restartButton.onClick.AddListener(RestartGame);
@@ -96,6 +108,10 @@ public class UIManager : MonoBehaviour
         tapToStartButton.onClick.RemoveListener(TapToStart);
         highScoreButton.onClick.RemoveListener(HighScoreToggle);
         missionMenuButton.onClick.RemoveListener(OpenMissionMenu);
+        shopButton.onClick.RemoveListener(OpenShopMenu);
+        mainMenuButton.onClick.RemoveListener(BackMainMenu);
+        closeShopButton.onClick.RemoveListener(CloseShopMenu);
+        startGameButton.onClick.RemoveListener(MenuStartGame);
         missionMenuCloseButton.onClick.RemoveListener(MissionMenuClose);
         settingsButton.onClick.RemoveListener(SettingsToggle);
         restartButton.onClick.RemoveListener(RestartGame);
@@ -104,7 +120,32 @@ public class UIManager : MonoBehaviour
         _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
         _eventBus.Unsubscribe<RestartGameEvent>(OnGameRestarted);
     }
-    
+
+    private void BackMainMenu()
+    {
+        CloseShopMenu();
+        gameOverPanel.SetActive(false);
+        _eventBus.Publish(new BackMainMenuEvent());
+    }
+
+    private void OpenShopMenu()
+    {
+        mainMenuPanel.gameObject.SetActive(false);
+        shopMenuPanel.SetActive(true);
+    }
+    private void CloseShopMenu()
+    {
+        mainMenuPanel.gameObject.SetActive(true);
+        shopMenuPanel.SetActive(false);
+    }
+
+    private void MenuStartGame()
+    {
+        mainMenuPanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+        tapToStartPanel.transform.gameObject.SetActive(true);
+    }
+
     private void ReloadGame()
     {
         _eventBus.Publish(new RestartGameEvent());
@@ -152,6 +193,7 @@ public class UIManager : MonoBehaviour
     public void UpdateGameCurrencyUI(int currentGameCurrency)
     {
         gameCurrencyText.text = currentGameCurrency.ToString();
+        shopMenuCurrencyText.text = currentGameCurrency.ToString();
     }
     private void ResetScoreUI()
     {

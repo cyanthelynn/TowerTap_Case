@@ -31,12 +31,19 @@ public class SaveManager : MonoBehaviour
     {
         _eventBus.Subscribe<GameStartEvent>(OnGameStart);
         _eventBus.Subscribe<GameEndedEvent>(OnGameEnded);
+        _eventBus.Subscribe<DataChangedEvent>(OnDataChanged);
     }
 
     private void OnDisable()
     {
         _eventBus.Unsubscribe<GameStartEvent>(OnGameStart);
         _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
+        _eventBus.Unsubscribe<DataChangedEvent>(OnDataChanged);
+    }
+
+    private void OnDataChanged(DataChangedEvent obj)
+    {
+        Save();
     }
 
     private void OnGameStart(GameStartEvent evt)
@@ -86,6 +93,7 @@ public class SaveManager : MonoBehaviour
         _gameData.maxComboCount = 0;
         _gameData.activeMissions.Clear();
         _gameData.completedMissions.Clear();
+        _gameData.collectedShopItems.Clear();
         _gameData.lastMissionResetDateString = "";
 
         if (Application.isPlaying)

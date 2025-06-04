@@ -25,5 +25,6 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterComponentInHierarchy<IncreaseTextHandler>();
         builder.RegisterComponentInHierarchy<DifficultyManager>();
         builder.RegisterComponentInHierarchy<MissionSystem>();
+        builder.RegisterComponentInHierarchy<ShopSystem>();
     }
 }

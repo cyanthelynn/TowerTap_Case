@@ -12,11 +12,7 @@ public class MissionItem : MonoBehaviour
     private string _missionId;
     private Action<string> _onClaim;
 
-    public void Setup(
-        Mission def,
-        bool isComplete,
-        bool isClaimed,
-        Action<string> onClaimCallback)
+    public void Setup(Mission def, bool isComplete, bool isClaimed, Action<string> onClaimCallback)
     {
         _missionId = def.id;
         _onClaim = onClaimCallback;

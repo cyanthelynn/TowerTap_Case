@@ -8,10 +8,23 @@ public class GameData : ScriptableObject
     public bool isSoundActive;
     
     public int gameCurrency;
+    
+    [Space]
+    [Header("PERFECT & COMBO COUNTS")]
     public int totalPerfectCount;
     public int maxComboCount;
+    [Space]
     
+    
+    [Header("MISSION DATA")]
+    [Space]
     public string lastMissionResetDateString; // “yyyy-MM-dd”
     public List<MissionProgress> activeMissions = new List<MissionProgress>();
     public List<MissionProgress> completedMissions = new List<MissionProgress>();
+    
+    
+    [Space]
+    [Header("SHOP DATA")]
+    [Space]
+    public List<int> collectedShopItems = new List<int>();
 }
