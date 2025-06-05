@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highScore: 0
   isSoundActive: 1
+  isHapticOn: 1
   gameCurrency: 0
   totalPerfectCount: 0
   maxComboCount: 0

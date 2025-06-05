@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MissionSystem;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MissionData", menuName = "Config/MissionData")]

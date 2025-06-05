@@ -3,6 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using VContainer;
 using Managers;
+using Pooling;
 
 public class ShopSystem : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class ShopSystem : MonoBehaviour
     [SerializeField] private Transform previewParent;
     
     [Inject] private IEventBus _eventBus;
-    [Inject] private GameData _gameData;
+    [Inject] private GameData.GameData _gameData;
     [Inject] private UIManager _uiManager;
     [Inject] private BlockPoolManager _blockPoolManager;
 
@@ -59,10 +60,8 @@ public class ShopSystem : MonoBehaviour
 
     private void GenerateShopUI()
     {
-        foreach (Transform child in shopListParent)
-            Destroy(child.gameObject);
-        _spawnedItems.Clear();
-        
+        RefreshShopList();
+
         for (int i = 0; i < shopData.shopDefinitions.Count; i++)
         {
             var def = shopData.shopDefinitions[i];
@@ -82,6 +81,13 @@ public class ShopSystem : MonoBehaviour
             );
             _spawnedItems[i] = item;
         }
+    }
+
+    private void RefreshShopList()
+    {
+        foreach (Transform child in shopListParent)
+            Destroy(child.gameObject);
+        _spawnedItems.Clear();
     }
 
     private void OnShopPurchase(int index)
@@ -120,11 +126,11 @@ public class ShopSystem : MonoBehaviour
 
     private void OnDataChanged(DataChangedEvent evt)
     {
-        foreach (var kvp in _spawnedItems)
+        foreach (var keyValuePair in _spawnedItems)
         {
-            int idx = kvp.Key;
-            var item = kvp.Value;
-            bool isCollected = _gameData.collectedShopItems.Contains(idx);
+            int index = keyValuePair.Key;
+            var item = keyValuePair.Value;
+            bool isCollected = _gameData.collectedShopItems.Contains(index);
             
             if (!isCollected)
             {
@@ -159,10 +165,10 @@ public class ShopSystem : MonoBehaviour
     private void ApplyEquippedColorToPreview()
     {
         if (_previewInstance == null) return;
-        int eqIdx = _gameData.selectedSkinIndex;
-        if (eqIdx < 0 || eqIdx >= shopData.shopDefinitions.Count) return;
+        int equipIndex = _gameData.selectedSkinIndex;
+        if (equipIndex < 0 || equipIndex >= shopData.shopDefinitions.Count) return;
 
-        var def = shopData.shopDefinitions[eqIdx];
+        var def = shopData.shopDefinitions[equipIndex];
         var renderers = _previewInstance.GetComponentsInChildren<Renderer>();
         foreach (var rend in renderers)
         {

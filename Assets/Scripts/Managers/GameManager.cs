@@ -1,29 +1,31 @@
-using Managers;
 using UnityEngine;
 using VContainer;
 
-public class GameManager : MonoBehaviour
+namespace Managers
 {
-    private IEventBus _eventBus;
-
-    [Inject]
-    public void Construct(IEventBus eventBus)
+    public class GameManager : MonoBehaviour
     {
-        _eventBus = eventBus;
-    }
+        private IEventBus _eventBus;
 
-    public void StartGame()
-    {
-        _eventBus.Publish(new GameStartEvent());
-    }
+        [Inject]
+        public void Construct(IEventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
 
-    public void EndGame()
-    {
-        _eventBus.Publish(new GameEndedEvent());
-    }
+        public void StartGame()
+        {
+            _eventBus.Publish(new GameStartEvent());
+        }
 
-    public void RestartGame()
-    {
-        _eventBus.Publish(new RestartGameEvent());
+        public void EndGame()
+        {
+            _eventBus.Publish(new GameEndedEvent());
+        }
+
+        public void RestartGame()
+        {
+            _eventBus.Publish(new RestartGameEvent());
+        }
     }
 }

@@ -13,7 +13,7 @@ public class ScoreManager : MonoBehaviour
   
     private IEventBus _eventBus;
     private UIManager _uiManager;
-    [SerializeField, Required] private GameData _gameData;
+    [SerializeField, Required] private GameData.GameData _gameData;
 
     [Inject]
     public void Construct(IEventBus eventBus,UIManager uiManager)
