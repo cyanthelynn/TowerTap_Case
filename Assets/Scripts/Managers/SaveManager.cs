@@ -6,11 +6,11 @@ using VContainer;
 #if UNITY_EDITOR
 #endif
 
-namespace Managers
+namespace TowerTap
 {
     public class SaveManager : MonoBehaviour
     {
-        [SerializeField, Required] private GameData.GameData _gameData;
+        [SerializeField, Required] private GameData _gameData;
 
         private IEventBus _eventBus;
         private string _savePath;

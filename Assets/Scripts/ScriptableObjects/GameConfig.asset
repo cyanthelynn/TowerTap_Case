@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockHeight: 0.1
   movementRange: 1.25
-  moveSpeed: 1.5
+  moveSpeed: 1.6356094
   minOverlapThreshold: 0.01
   perfectPlacementThreshold: 0.025
   minSpeed: 1.5

@@ -357,7 +357,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7197717539026324649}
   m_Father: {fileID: 0}
@@ -381,11 +381,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorSwatch: {fileID: 1860586307580026621}
   priceText: {fileID: 3772530548783218184}
+  priceTextParent: {fileID: 178257266207289007}
   purchaseButton: {fileID: 581227980275615260}
   collectedText: {fileID: 9012757346596860047}
   equipButton: {fileID: 8072178269304010773}
   equippedText: {fileID: 8842129960059392076}
-  priceTextParent: {fileID: 178257266207289007}
 --- !u!1 &2365652701333796417
 GameObject:
   m_ObjectHideFlags: 0
@@ -1222,8 +1222,8 @@ RectTransform:
   m_GameObject: {fileID: 8255262158633633409}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5432666832429787261}
   - {fileID: 3685081424688424150}

@@ -1,6 +1,4 @@
 
-namespace Managers
-{
     public struct GameStartEvent { }
     public struct GameEndedEvent { }
     public struct RestartGameEvent{}
@@ -11,5 +9,4 @@ namespace Managers
     public struct OnMissionClaimed{}
     public struct DataChangedEvent { }
     public struct BlockSkinChangedEvent { }
-
-}
+    

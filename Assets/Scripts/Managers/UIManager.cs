@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using VContainer;
 
-namespace Managers
+namespace TowerTap
 {
     public class UIManager : MonoBehaviour
     {
@@ -109,14 +109,14 @@ namespace Managers
             else
             {
             
-                highScoreRect.DOAnchorPosX(120, 1).SetEase(Ease.OutBounce).OnComplete((() => 
+                highScoreRect.DOAnchorPosX(230, 1).SetEase(Ease.OutBounce).OnComplete((() => 
                     _isHighScoreOpen = false ));
             }
         }
         private void OpenMissionMenu()
         {
             missionMenuRect.DOAnchorPosX(-450, 1).SetEase(Ease.OutBounce);
-            missionMenuButton.GetComponent<RectTransform>().DOAnchorPosX(60,1).SetEase(Ease.OutBounce);
+            missionMenuButton.GetComponent<RectTransform>().DOAnchorPosX(200,1).SetEase(Ease.OutBounce);
         }
         private void MissionMenuClose()
         {
@@ -128,7 +128,7 @@ namespace Managers
             if (!_isSettingsOpen)
             {
                 _isSettingsOpen = true;
-                settingsRect.DOScaleY(1, 1).SetEase(Ease.OutBounce);
+                settingsRect.DOScaleY(2, 1).SetEase(Ease.OutBounce);
             }
             else
             {
@@ -142,6 +142,7 @@ namespace Managers
         {
             CloseGameHUD();
             CloseShopMenu();
+            missionMenuRect.gameObject.SetActive(false);
             gameOverPanel.SetActive(false);
             _eventBus.Publish(new BackMainMenuEvent());
         }
@@ -194,6 +195,7 @@ namespace Managers
         private void OnGameStart(GameStartEvent evt)
         {
             hudPanel.SetActive(true);
+            missionMenuRect.gameObject.SetActive(true);
             ResetScoreUI();
             gameOverPanel.SetActive(false);
         }

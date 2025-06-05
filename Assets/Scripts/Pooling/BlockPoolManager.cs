@@ -1,24 +1,23 @@
 using System.Collections.Generic;
-using Managers;
 using UnityEngine;
 using UnityEngine.Pool;
 using VContainer;
 
-namespace Pooling
+namespace TowerTap
 {
     public class BlockPoolManager : MonoBehaviour
     {
         [SerializeField] private Block blockPrefab;
 
         private ObjectPool<Block> blockPool;
-        private GameData.GameData _gameData;
+        private GameData _gameData;
         private ShopData _shopData;
         private IEventBus _eventBus;
     
         private readonly List<Block> _allBlocks = new List<Block>();
 
         [Inject]
-        public void Construct(IEventBus eventBus, GameData.GameData gameData, ShopData shopData)
+        public void Construct(IEventBus eventBus, GameData gameData, ShopData shopData)
         {
             _eventBus  = eventBus;
             _gameData  = gameData;

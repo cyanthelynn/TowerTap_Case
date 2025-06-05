@@ -1,18 +1,17 @@
 using System.Collections.Generic;
 using DG.Tweening;
-using Pooling;
+using GameConfig;
+using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using VContainer;
 using VContainer.Unity;
 
-namespace Managers
+namespace TowerTap
 {
     public class TowerStackManager : MonoBehaviour, IStartable
     {
         #region DI FIELDS
-    
-        [Inject] private GameParameters parameters;
+        
         [Inject] private GameManager _gameManager;
         [Inject] private BlockPoolManager _blockPoolManager;
         [Inject] private ParticleManager _particleManager;
@@ -20,9 +19,10 @@ namespace Managers
         [Inject] private IEventBus _eventBus;
         [Inject] private IncreaseTextHandler _increaseTextHandler;
         [Inject] private ScoreManager _scoreManager;
-        [Inject] private GameData.GameData _gameData;
+        [Inject] private GameData _gameData;
         [Inject] private ShopData _shopData;
         [Inject] private IHapticManager _hapticManager;
+        [Inject] private InputManager _inputManager;
     
         #endregion
 
@@ -38,6 +38,11 @@ namespace Managers
     
         #endregion
     
+        #region SERIALIZE FIELDS
+        
+        [SerializeField,Required] private GameParameters parameters;
+        
+        #endregion
         #region EVENT SUBSCRIPTION FUNCTIONS
     
         private void OnEnable()
@@ -65,10 +70,7 @@ namespace Managers
         private void Update()
         {
             if (_isGameOver) return;
-            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject(0))
-            {
-                TryTrimBlock();
-            }
+            if(_inputManager.TryClickActionInput()) TryTrimBlock();
         }
         private void OnTriggerEnter(Collider other)
         {
@@ -78,8 +80,6 @@ namespace Managers
                 _spawnedBlocks.Remove(block);
             }
         }
-   
-    
         #endregion
     
         #region GAME EVENTS
@@ -149,7 +149,7 @@ namespace Managers
     
         private void InitFirstTower()
         {
-            Vector3 basePos = new Vector3(0, -0.45f, 0);
+            Vector3 basePos = GetFirstTowerPosition();
             var baseBlock = _blockPoolManager.GetBlock();
             baseBlock.transform.SetParent(transform, false);
             baseBlock.transform.localPosition = basePos;
@@ -159,6 +159,11 @@ namespace Managers
             _cameraController.SetCameraHeight(baseBlock);
         }
 
+        private Vector3 GetFirstTowerPosition()
+        {
+            float yPos = - (1f - parameters.blockHeight) * 0.5f;
+            return new Vector3(0f, yPos, 0f);
+        }
         private void ClearTowerStack()
         {
             foreach (var block in _stackedBlocks)

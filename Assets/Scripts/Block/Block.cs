@@ -1,22 +1,25 @@
 using UnityEngine;
 
-public class Block : MonoBehaviour
+namespace TowerTap
 {
-    [SerializeField] private ParticleSystem perfectEffect;
-    private Rigidbody _rb;
-    void Awake() => _rb = GetComponent<Rigidbody>();
-
-    public void SetKinematic(bool result)
+    public class Block : MonoBehaviour
     {
-        _rb.isKinematic = result;
-    }
+        [SerializeField] private ParticleSystem perfectEffect;
+        private Rigidbody _rb;
+        void Awake() => _rb = GetComponent<Rigidbody>();
 
-    public void PlayPerfectEffect() => perfectEffect.Play();
+        public void SetKinematic(bool result)
+        {
+            _rb.isKinematic = result;
+        }
 
-    public void SetDefaultRotation()
-    {
-        var transformRotation = transform.rotation;
-        transformRotation.eulerAngles = Vector3.zero;
-        transform.rotation = transformRotation;
+        public void PlayPerfectEffect() => perfectEffect.Play();
+
+        public void SetDefaultRotation()
+        {
+            var transformRotation = transform.rotation;
+            transformRotation.eulerAngles = Vector3.zero;
+            transform.rotation = transformRotation;
+        }
     }
 }

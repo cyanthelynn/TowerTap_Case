@@ -1,5 +1,6 @@
+using GameConfig;
 using Managers;
-using Pooling;
+using TowerTap;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -8,13 +9,13 @@ namespace VContainer
     public class GameLifetimeScope : LifetimeScope
     {
         [SerializeField] private GameParameters gameParameters;
-        [SerializeField] private GameData.GameData gameData;
+        [SerializeField] private GameData gameData;
         [SerializeField] private MissionData missionData;
         [SerializeField] private ShopData shopData;
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterInstance(gameParameters);
-            builder.RegisterInstance(gameData).As<GameData.GameData>();;
+            builder.RegisterInstance(gameData).As<GameData>();;
             builder.RegisterInstance(missionData);
             builder.RegisterInstance(shopData);
             builder.Register<IEventBus, EventBus>(Lifetime.Singleton);
@@ -30,6 +31,7 @@ namespace VContainer
             builder.RegisterComponentInHierarchy<HapticManager>().As<IHapticManager>().WithParameter(_ => gameData);
             builder.RegisterComponentInHierarchy<IncreaseTextHandler>();
             builder.RegisterComponentInHierarchy<DifficultyManager>();
+            builder.RegisterComponentInHierarchy<InputManager>();
             builder.RegisterComponentInHierarchy<MissionSystem.MissionSystem>();
             builder.RegisterComponentInHierarchy<ShopSystem>();
         }

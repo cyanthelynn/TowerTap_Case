@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using MissionSystem;
 using UnityEngine;
 
-namespace GameData
+namespace TowerTap
 {
     [CreateAssetMenu(fileName = "GameData", menuName = "Config/GameData")]
     public class GameData : ScriptableObject

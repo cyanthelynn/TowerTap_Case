@@ -1,7 +1,7 @@
 using UnityEngine;
 using VContainer;
 
-namespace Managers
+namespace TowerTap
 {
     public class GameManager : MonoBehaviour
     {

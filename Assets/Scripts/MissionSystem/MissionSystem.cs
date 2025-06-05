@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Managers;
+using TowerTap;
 using UnityEngine;
 using VContainer;
 
@@ -22,7 +23,7 @@ namespace MissionSystem
         [Inject] private IEventBus _eventBus;
         [Inject] private SaveManager _saveManager;
         [Inject] private ScoreManager _scoreManager;
-        [Inject] private GameData.GameData _gameData;
+        [Inject] private GameData _gameData;
 
         private List<MissionProgress> _activeMissions;
         private List<MissionProgress> _completedMissions;

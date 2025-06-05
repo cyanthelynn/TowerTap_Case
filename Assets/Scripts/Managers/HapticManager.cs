@@ -1,7 +1,7 @@
 using UnityEngine;
 using VContainer;
 
-namespace Managers
+namespace TowerTap
 {
     public interface IHapticManager
     {
@@ -20,7 +20,7 @@ namespace Managers
 
     public class HapticManager : MonoBehaviour, IHapticManager
     {
-        [Inject] private GameData.GameData _gameData;
+        [Inject] private GameData _gameData;
     
         public bool IsHapticEnabled => _gameData.isHapticOn;
         
