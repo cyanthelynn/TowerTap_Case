@@ -9,8 +9,12 @@ public class SoundManager : MonoBehaviour
     [Header("SOUND CLIPS")]
     [SerializeField] private AudioClip placementClip;
     [SerializeField] private AudioClip gameEndClip;
+    [SerializeField] private AudioClip claimSomethingClip;
+    [SerializeField] private AudioClip skinChangeClip;
+    [SerializeField] private AudioClip dataChangeClip;
 
     [Space]
+    [Header("POOLING SETTINGS")]
     [SerializeField] private int defaultPoolSize = 10;
     [SerializeField] private int maxPoolSize = 100;
     [SerializeField] private float startPitch = 0.5f;
@@ -60,6 +64,9 @@ public class SoundManager : MonoBehaviour
         _eventBus.Subscribe<PerfectPlacementEvent>(OnBlockPerfectPlacement);
         _eventBus.Subscribe<GameStartEvent>(OnGameStart);
         _eventBus.Subscribe<GameEndedEvent>(OnGameEnded);
+        _eventBus.Subscribe<OnMissionClaimed>(MissionClaimed);
+        _eventBus.Subscribe<BlockSkinChangedEvent>(OnBlockSkinChange);
+        _eventBus.Subscribe<DataChangedEvent>(OnDataChange);
     }
     
     private void OnDisable()
@@ -68,6 +75,24 @@ public class SoundManager : MonoBehaviour
         _eventBus.Unsubscribe<PerfectPlacementEvent>(OnBlockPerfectPlacement);
         _eventBus.Unsubscribe<GameStartEvent>(OnGameStart);
         _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
+        _eventBus.Unsubscribe<OnMissionClaimed>(MissionClaimed);
+        _eventBus.Unsubscribe<BlockSkinChangedEvent>(OnBlockSkinChange);
+        _eventBus.Unsubscribe<DataChangedEvent>(OnDataChange);
+    }
+
+    private void OnDataChange(DataChangedEvent obj)
+    {
+        PlayDataChangeSound();
+    }
+
+    private void OnBlockSkinChange(BlockSkinChangedEvent obj)
+    {
+        PlaySkinChangeSound();
+    }
+
+    private void MissionClaimed(OnMissionClaimed obj)
+    {
+        PlayMissionClaimedSound();
     }
 
     private void OnGameStart(GameStartEvent evt)
@@ -99,6 +124,7 @@ public class SoundManager : MonoBehaviour
         PlayEndGameSound();
     }
 
+    
     private void PlayPlacementSound()
     {
         if (placementClip == null) return;
@@ -110,6 +136,33 @@ public class SoundManager : MonoBehaviour
         StartCoroutine(ReturnToPoolAfterDuration(src, placementClip.length / src.pitch));
     }
 
+    private void PlayDataChangeSound()
+    {
+        if ( dataChangeClip== null) return;
+
+        var src = _audioPool.Get();
+        src.pitch = 1;
+        src.clip = dataChangeClip;
+        src.Play();
+    }
+    private void PlayMissionClaimedSound()
+    {
+        if (claimSomethingClip == null) return;
+
+        var src = _audioPool.Get();
+        src.pitch = 1;
+        src.clip = claimSomethingClip;
+        src.Play();
+    }
+    private void PlaySkinChangeSound()
+    {
+        if (skinChangeClip == null) return;
+
+        var src = _audioPool.Get();
+        src.pitch = 1;
+        src.clip = skinChangeClip;
+        src.Play();
+    }
     private void PlayEndGameSound()
     {
         if (gameEndClip == null) return;

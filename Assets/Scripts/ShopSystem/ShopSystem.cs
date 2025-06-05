@@ -16,7 +16,7 @@ public class ShopSystem : MonoBehaviour
     [Header("Preview Settings")]
     [SerializeField] private GameObject blockPreviewPrefab;
     [SerializeField] private Transform previewParent;
-
+    
     [Inject] private IEventBus _eventBus;
     [Inject] private GameData _gameData;
     [Inject] private UIManager _uiManager;
@@ -52,7 +52,6 @@ public class ShopSystem : MonoBehaviour
 
     private void Start()
     {
-        ApplyEquippedColorToPoolPrefab();
         GenerateShopUI();
         InstantiatePreview();
         ApplyEquippedColorToPreview();
@@ -112,8 +111,6 @@ public class ShopSystem : MonoBehaviour
         _eventBus.Publish(new DataChangedEvent());
         _uiManager.UpdateGameCurrencyUI(_gameData.gameCurrency);
         
-        ApplyEquippedColorToPoolPrefab();
-        
         _eventBus.Publish(new BlockSkinChangedEvent());
         
         ApplyEquippedColorToPreview();
@@ -172,15 +169,5 @@ public class ShopSystem : MonoBehaviour
             rend.material.color = def.color;
         }
     }
-
-    private void ApplyEquippedColorToPoolPrefab()
-    {
-        int eqIdx = _gameData.selectedSkinIndex;
-        if (eqIdx < 0 || eqIdx >= shopData.shopDefinitions.Count) return;
-
-        var def = shopData.shopDefinitions[eqIdx];
-        Color chosenColor = def.color;
-        
-        _blockPoolManager.SetBlockPrefabColor(chosenColor);
-    }
+    
 }

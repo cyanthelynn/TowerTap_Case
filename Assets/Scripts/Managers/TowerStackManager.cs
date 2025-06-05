@@ -25,12 +25,12 @@ public class TowerStackManager : MonoBehaviour, IStartable
 
     #region PRIVATE FIELDS
     
-    private readonly Stack<Block> stackedBlocks = new Stack<Block>();
+    private readonly Stack<Block> _stackedBlocks = new Stack<Block>();
     private readonly List<Block> _spawnedBlocks = new List<Block>();
-    private Block currentMovingBlock;
-    private int layerCount;
-    private bool isGameOver;
-    private Vector3 moveDirection;
+    private Block _currentMovingBlock;
+    private int _layerCount;
+    private bool _isGameOver;
+    private Vector3 _moveDirection;
     private Tween _moveTween;
     
     #endregion
@@ -41,7 +41,6 @@ public class TowerStackManager : MonoBehaviour, IStartable
     {
         _eventBus.Subscribe<GameStartEvent>(OnGameStart);
         _eventBus.Subscribe<GameEndedEvent>(OnGameEnded);
-        _eventBus.Subscribe<BlockSkinChangedEvent>(OnBlockSkinChanged);
         _eventBus.Subscribe<RestartGameEvent>(OnGameRestarted);
         _eventBus.Subscribe<BackMainMenuEvent>(BackToMainMenu);
     }
@@ -49,7 +48,6 @@ public class TowerStackManager : MonoBehaviour, IStartable
     {
         _eventBus.Unsubscribe<GameStartEvent>(OnGameStart);
         _eventBus.Unsubscribe<GameEndedEvent>(OnGameEnded);
-        _eventBus.Unsubscribe<BlockSkinChangedEvent>(OnBlockSkinChanged);
         _eventBus.Unsubscribe<RestartGameEvent>(OnGameRestarted);
         _eventBus.Unsubscribe<BackMainMenuEvent>(BackToMainMenu);
     }
@@ -63,7 +61,7 @@ public class TowerStackManager : MonoBehaviour, IStartable
     }
     private void Update()
     {
-        if (isGameOver) return;
+        if (_isGameOver) return;
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject(0))
         {
             TryTrimBlock();
@@ -85,9 +83,9 @@ public class TowerStackManager : MonoBehaviour, IStartable
     
     private void OnGameStart(GameStartEvent evt)
     {
-        isGameOver = false;
+        _isGameOver = false;
         parameters.moveSpeed = parameters.minSpeed;
-        moveDirection = Vector3.zero;
+        _moveDirection = Vector3.zero;
         SpawnNextMovingBlock();
     }
 
@@ -99,10 +97,10 @@ public class TowerStackManager : MonoBehaviour, IStartable
 
     private void OnGameRestarted(RestartGameEvent evt)
     {
-        if (currentMovingBlock != null)
+        if (_currentMovingBlock != null)
         {
-            poolManager.ReleaseBlock(currentMovingBlock);
-            currentMovingBlock = null;
+            poolManager.ReleaseBlock(_currentMovingBlock);
+            _currentMovingBlock = null;
         }
         
         foreach (var block in _spawnedBlocks)
@@ -112,21 +110,21 @@ public class TowerStackManager : MonoBehaviour, IStartable
         _spawnedBlocks.Clear();
         
         ClearTowerStack();
-        layerCount = 0;
+        _layerCount = 0;
         InitFirstTower();
         _cameraController.SetPlayGameCamera(true);
-        isGameOver = false;
-        moveDirection = Vector3.zero;
+        _isGameOver = false;
+        _moveDirection = Vector3.zero;
     }
 
     private void BackToMainMenu(BackMainMenuEvent evt)
     {
-        isGameOver = true;
+        _isGameOver = true;
 
-        if (currentMovingBlock != null)
+        if (_currentMovingBlock != null)
         {
-            poolManager.ReleaseBlock(currentMovingBlock);
-            currentMovingBlock = null;
+            poolManager.ReleaseBlock(_currentMovingBlock);
+            _currentMovingBlock = null;
         }
         foreach (var block in _spawnedBlocks)
         {
@@ -135,25 +133,11 @@ public class TowerStackManager : MonoBehaviour, IStartable
         _spawnedBlocks.Clear();
 
         ClearTowerStack();
-        layerCount = 0;
+        _layerCount = 0;
         InitFirstTower();
         _cameraController.SetPlayGameCamera(true);
         
         _eventBus.Publish(new DataChangedEvent());
-    }
-    
-    private void OnBlockSkinChanged(BlockSkinChangedEvent evt)
-    {
-        int eqIdx = _gameData.selectedSkinIndex;
-        if (eqIdx < 0 || eqIdx >= _shopData.shopDefinitions.Count) return;
-        Color newColor = _shopData.shopDefinitions[eqIdx].color;
-
-        foreach (var blk in stackedBlocks)
-            ApplyColorToBlockInstance(blk, newColor);
-        foreach (var blk in _spawnedBlocks)
-            ApplyColorToBlockInstance(blk, newColor);
-        if (currentMovingBlock != null)
-            ApplyColorToBlockInstance(currentMovingBlock, newColor);
     }
     
     #endregion
@@ -167,18 +151,18 @@ public class TowerStackManager : MonoBehaviour, IStartable
         baseBlock.transform.SetParent(transform, false);
         baseBlock.transform.localPosition = basePos;
         baseBlock.transform.localScale = Vector3.one;
-        stackedBlocks.Push(baseBlock);
-        layerCount = 1;
+        _stackedBlocks.Push(baseBlock);
+        _layerCount = 1;
         _cameraController.SetCameraHeight(baseBlock);
     }
 
     private void ClearTowerStack()
     {
-        foreach (var block in stackedBlocks)
+        foreach (var block in _stackedBlocks)
         {
             poolManager.ReleaseBlock(block);
         }
-        stackedBlocks.Clear();
+        _stackedBlocks.Clear();
     }
     private void CalculateSpawnScale(Block lastBlock, ref Vector3 spawnScale)
     {
@@ -189,8 +173,8 @@ public class TowerStackManager : MonoBehaviour, IStartable
 
     private void DetermineSpawnParameters(Block lastBlock, ref Vector3 spawnPos, ref Vector3 direction)
     {
-        bool moveOnZ = layerCount % 2 == 1;
-        float spawnY = layerCount * parameters.blockHeight;
+        bool moveOnZ = _layerCount % 2 == 1;
+        float spawnY = _layerCount * parameters.blockHeight;
         float range = parameters.movementRange;
 
         if (moveOnZ)
@@ -209,25 +193,25 @@ public class TowerStackManager : MonoBehaviour, IStartable
     
     private void TryTrimBlock()
     {
-        if (currentMovingBlock == null) return;
+        if (_currentMovingBlock == null) return;
 
-        var lastBlock = stackedBlocks.Peek();
-        bool moveOnZ = layerCount % 2 == 1;
+        var lastBlock = _stackedBlocks.Peek();
+        bool moveOnZ = _layerCount % 2 == 1;
         
-        if (!TryProcessAxis(moveOnZ, lastBlock, currentMovingBlock))
+        if (!TryProcessAxis(moveOnZ, lastBlock, _currentMovingBlock))
         {
-            isGameOver = true;
-            currentMovingBlock.GetComponent<Rigidbody>().isKinematic = false;
+            _isGameOver = true;
+            _currentMovingBlock.SetKinematic(false);
             _gameManager.EndGame();
             Debug.Log("GAME OVER");
             return;
         }
         
-        stackedBlocks.Push(currentMovingBlock);
-        layerCount++;
+        _stackedBlocks.Push(_currentMovingBlock);
+        _layerCount++;
         _cameraController.SetCameraHeight(lastBlock);
 
-        currentMovingBlock = null;
+        _currentMovingBlock = null;
         SpawnNextMovingBlock();
     }
 
@@ -407,31 +391,27 @@ public class TowerStackManager : MonoBehaviour, IStartable
     
     private void SpawnNextMovingBlock()
     {
-        if (isGameOver) return;
-        
-        if(currentMovingBlock !=null) poolManager.ReleaseBlock(currentMovingBlock);
+        if (_isGameOver) return;
 
-        var lastBlock = stackedBlocks.Peek();
+        if (_currentMovingBlock != null)
+        {
+            poolManager.ReleaseBlock(_currentMovingBlock);
+            _currentMovingBlock = null;
+        }
+
+        var lastBlock = _stackedBlocks.Peek();
         Vector3 spawnScale = default;
         CalculateSpawnScale(lastBlock, ref spawnScale);
 
         Vector3 spawnPos = default;
-        DetermineSpawnParameters(lastBlock, ref spawnPos, ref moveDirection);
+        DetermineSpawnParameters(lastBlock, ref spawnPos, ref _moveDirection);
         
-        currentMovingBlock = poolManager.GetBlock();
-        currentMovingBlock.SetKinematic(true);
+        _currentMovingBlock = poolManager.GetBlock();
+        _currentMovingBlock.SetKinematic(true);
         
-        int skinIndex = _gameData.selectedSkinIndex;
-        if (skinIndex >= 0 && skinIndex < _shopData.shopDefinitions.Count)
-        {
-            var chosenColor = _shopData.shopDefinitions[skinIndex].color;
-            var rend = currentMovingBlock.GetComponent<Renderer>();
-            rend.material.color = chosenColor;
-        }
-        
-        currentMovingBlock.transform.SetParent(transform, false);
-        currentMovingBlock.transform.localPosition = spawnPos;
-        currentMovingBlock.transform.localScale = spawnScale;
+        _currentMovingBlock.transform.SetParent(transform, false);
+        _currentMovingBlock.transform.localPosition = spawnPos;
+        _currentMovingBlock.transform.localScale = spawnScale;
         
         MoveBlock();
     }
@@ -441,25 +421,20 @@ public class TowerStackManager : MonoBehaviour, IStartable
         float distance = parameters.movementRange * 2f;
         float duration = distance / parameters.moveSpeed;
 
-        if (moveDirection.z != 0f)
+        if (_moveDirection.z != 0f)
         {
-            _moveTween = currentMovingBlock.transform
+            _moveTween = _currentMovingBlock.transform
                 .DOLocalMoveZ(parameters.movementRange, duration)
                 .SetLoops(-1, LoopType.Yoyo)
                 .SetEase(Ease.Linear);
         }
         else
         {
-            _moveTween = currentMovingBlock.transform
+            _moveTween = _currentMovingBlock.transform
                 .DOLocalMoveX(parameters.movementRange, duration)
                 .SetLoops(-1, LoopType.Yoyo)
                 .SetEase(Ease.Linear);
         }
-    }
-    private void ApplyColorToBlockInstance(Block blockInstance, Color color)
-    {
-        var rend = blockInstance.GetComponent<Renderer>();
-        rend.material.color = color;
     }
     #endregion
     

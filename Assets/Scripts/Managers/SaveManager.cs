@@ -110,6 +110,7 @@ public class SaveManager : MonoBehaviour
             EnsureSavePath();
             string json = JsonUtility.ToJson(_gameData);
             File.WriteAllText(_savePath, json);
+            Debug.Log("SAVE DATA DELETED");
         }
 #endif
     }
